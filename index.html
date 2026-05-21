@@ -21,16 +21,7 @@
     <nav class="border-b border-gray-800 bg-[#1E293B] px-6 py-4 flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-[#22D3EE]">instaNet Portal <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded ml-2">ULTIMATE ENGINE</span></h1>
-            <div class="flex items-center gap-4 mt-1">
-                <div class="flex items-center gap-1.5 text-xs text-gray-400">
-                    <span>Κλάδος:</span>
-                    <select id="category-select" onchange="changeCategory(this.value)" class="bg-[#0F172A] border border-gray-700 rounded px-2 py-0.5 text-white font-semibold focus:outline-none focus:border-[#22D3EE]">
-                        <option value="Εστίαση">☕ Εστίαση (Καφέ/Φαγητό)</option>
-                        <option value="Λιανική">🛍️ Λιανική (Μόδα/Προϊόντα)</option>
-                        <option value="Υπηρεσίες">🏋️‍♂️ Υπηρεσίες (Γυμναστήρια)</option>
-                    </select>
-                </div>
-            </div>
+            <p class="text-xs text-gray-400 mt-0.5">Καλωσήρθατε στο κέντρο ελέγχου της επιχείρησής σας</p>
         </div>
         <button onclick="alert('Αποσύνδεση...')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl border border-red-500/20">Έξοδος</button>
     </nav>
@@ -70,7 +61,7 @@
             <div class="bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg h-fit space-y-4">
                 <h3 class="text-lg font-bold text-gray-200 border-b border-gray-800 pb-3 flex justify-between items-center">
                     <span>🚀 Δημιουργία Καμπάνιας</span>
-                    <span id="category-badge" class="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded font-bold">Εστίαση</span>
+                    <span id="category-badge" class="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded font-bold">Φόρτωση...</span>
                 </h3>
 
                 <div>
@@ -107,56 +98,88 @@
         </div>
 
         <div id="tab-content-profile" class="hidden">
-            <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg p-8 max-w-3xl mx-auto">
+            <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg p-8 max-w-4xl mx-auto">
                 <div class="flex items-center gap-4 border-b border-gray-800 pb-6 mb-6">
                     <div class="bg-[#0F172A] p-4 rounded-full border border-gray-700">
                         <span class="text-3xl">🏪</span>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-white">Ψηφιακή Βιτρίνα</h2>
-                        <p class="text-gray-400 text-sm mt-1">Πώς βλέπουν οι φοιτητές το κατάστημά σας στο instaNet App.</p>
+                        <h2 class="text-2xl font-bold text-white">Ψηφιακή Βιτρίνα (Πλήρες Προφίλ)</h2>
+                        <p class="text-gray-400 text-sm mt-1">Αυτά τα στοιχεία θα εμφανίζονται αυτόματα στην εφαρμογή των φοιτητών.</p>
                     </div>
                 </div>
 
                 <form id="profile-form" class="space-y-6">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-[#0F172A]/30 p-4 rounded-xl border border-gray-800/60 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμος Λογότυπου (URL Image)</label>
-                            <input type="text" id="p-logo" placeholder="π.χ. https://site.com/logo.png" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
-                            <p class="text-[10px] text-gray-500 mt-1">Αργότερα θα προσθέσουμε κουμπί Upload.</p>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Όνομα Καταστήματος</label>
+                            <input type="text" id="p-name" required placeholder="π.χ. Coffee Island - Κέντρο" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Διεύθυνση / Τοποθεσία</label>
-                            <input type="text" id="p-address" placeholder="π.χ. Εγνατία 156, Θεσσαλονίκη" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                            <label class="block text-xs font-semibold text-amber-400 uppercase mb-2">🎯 Κλάδος / Κατηγορία Επιχείρησης</label>
+                            <select id="p-category" required class="w-full bg-[#0F172A] border border-amber-500/40 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 text-white font-bold">
+                                <option value="Εστίαση">☕ Εστίαση (Καφέ/Φαγητό)</option>
+                                <option value="Λιανική">🛍️ Λιανική (Μόδα/Αξεσουάρ/Προϊόντα)</option>
+                                <option value="Υπηρεσίες">🏋️‍♂️ Υπηρεσίες (Γυμναστήρια/Κομμωτήρια/Εξορμήσεις)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμος Λογότυπου (Logo URL)</label>
+                            <input type="text" id="p-logo" placeholder="https://example.com/logo.png" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμος Εξωφύλλου (Cover Banner URL)</label>
+                            <input type="text" id="p-banner" placeholder="https://example.com/banner.jpg" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-800 pt-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Φυσική Διεύθυνση (Για GPS Χάρτη)</label>
+                            <input type="text" id="p-address" placeholder="π.χ. Τσιμισκή 55, Θεσσαλονίκη" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Τηλέφωνο Καταστήματος</label>
+                            <input type="text" id="p-phone" placeholder="π.χ. 2310223344" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Ωράριο Λειτουργίας</label>
+                            <input type="text" id="p-hours" placeholder="π.χ. Δευ-Κυρ: 08:00 - 23:00" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Ιστοσελίδα / E-shop URL</label>
+                            <input type="text" id="p-website" placeholder="π.w. https://www.coffeeisland.gr" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Περιγραφή Καταστήματος (Bio)</label>
-                        <textarea id="p-bio" rows="3" placeholder="Γράψτε λίγα λόγια για το μαγαζί σας..." class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white"></textarea>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Περιγραφή Επιχείρησης (Bio / Μήνυμα προς Φοιτητές)</label>
+                        <textarea id="p-bio" rows="3" placeholder="Γράψτε ένα ελκυστικό κείμενο για τους φοιτητές που θα βλέπουν την προσφορά σας..." class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white"></textarea>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-800 pt-6">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Ώρες Λειτουργίας</label>
-                            <input type="text" id="p-hours" placeholder="π.χ. Δευ-Κυρ: 08:00 - 22:00" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="block text-xs font-semibold text-gray-400 uppercase">Social Media</label>
+                    <div class="border-t border-gray-800 pt-4">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμοι Social Media</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="flex items-center bg-[#0F172A] border border-gray-700 rounded-xl overflow-hidden">
-                                <span class="px-3 text-pink-500 font-bold border-r border-gray-700">IG</span>
-                                <input type="text" id="p-ig" placeholder="@username" class="w-full bg-transparent px-3 py-2 text-sm focus:outline-none text-white">
+                                <span class="px-4 text-pink-500 font-bold border-r border-gray-700 text-sm bg-slate-900/40 py-3">Instagram</span>
+                                <input type="text" id="p-ig" placeholder="@username" class="w-full bg-transparent px-4 text-sm focus:outline-none text-white">
                             </div>
                             <div class="flex items-center bg-[#0F172A] border border-gray-700 rounded-xl overflow-hidden">
-                                <span class="px-3 text-white font-bold border-r border-gray-700">TT</span>
-                                <input type="text" id="p-tiktok" placeholder="@username" class="w-full bg-transparent px-3 py-2 text-sm focus:outline-none text-white">
+                                <span class="px-4 text-white font-bold border-r border-gray-700 text-sm bg-slate-900/40 py-3">TikTok</span>
+                                <input type="text" id="p-tiktok" placeholder="@username" class="w-full bg-transparent px-4 text-sm focus:outline-none text-white">
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="mt-4 w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-bold py-3 px-4 rounded-xl transition text-sm shadow-lg shadow-[#22D3EE]/10">
-                        Αποθήκευση Προφίλ
+                    <button type="submit" class="w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-bold py-3.5 px-4 rounded-xl transition text-sm shadow-lg shadow-[#22D3EE]/10 uppercase tracking-wider">
+                        💾 Αποθήκευση Ολοκληρωμένου Προφίλ
                     </button>
                     <div id="p-status" class="text-center text-xs font-medium hidden mt-3"></div>
                 </form>
@@ -168,55 +191,79 @@
     <script>
         // --- 1. ΣΥΣΤΗΜΑ TABS ---
         function switchTab(tabName) {
-            // Κρύβουμε/Εμφανίζουμε το περιεχόμενο
             document.getElementById('tab-content-coupons').classList.add('hidden');
             document.getElementById('tab-content-profile').classList.add('hidden');
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
 
-            // Αλλάζουμε τα χρώματα στα κουμπιά
             const btnC = document.getElementById('tab-btn-coupons');
             const btnP = document.getElementById('tab-btn-profile');
             
             if(tabName === 'coupons') {
                 btnC.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 btnP.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
+                loadMerchantCategoryOnly(); // Ανανέωση του κλάδου στη φόρμα κουπονιών
             } else {
                 btnP.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 btnC.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
-                loadMerchantProfile(); // Φορτώνουμε τα δεδομένα όταν ανοίγει το Tab
+                loadMerchantProfile(); 
             }
         }
 
-        // --- 2. ΛΕΙΤΟΥΡΓΙΕΣ ΠΡΟΦΙΛ ΚΑΤΑΣΤΗΜΑΤΟΣ ---
+        // --- 2. ΛΕΙΤΟΥΡΓΙΕΣ ΦΟΡΤΩΣΗΣ & ΑΠΟΘΗΚΕΥΣΗΣ ΠΡΟΦΙΛ ---
         async function loadMerchantProfile() {
             try {
                 const { data, error } = await supaClient.from('merchants').select('*').eq('id', MERCHANT_ID).single();
                 if (error) throw error;
                 if (data) {
+                    document.getElementById('p-name').value = data.name || '';
+                    document.getElementById('p-category').value = data.category || 'Εστίαση';
                     document.getElementById('p-logo').value = data.logo_url || '';
+                    document.getElementById('p-banner').value = data.banner_url || '';
                     document.getElementById('p-address').value = data.address || '';
+                    document.getElementById('p-phone').value = data.phone || '';
                     document.getElementById('p-bio').value = data.bio || '';
+                    document.getElementById('p-website').value = data.website || '';
                     
-                    // Επειδή είναι JSON, διαβάζουμε τις τιμές
                     if(data.opening_hours) document.getElementById('p-hours').value = data.opening_hours.text || '';
                     if(data.social_links) {
                         document.getElementById('p-ig').value = data.social_links.instagram || '';
                         document.getElementById('p-tiktok').value = data.social_links.tiktok || '';
                     }
+                    
+                    // Συγχρονίζουμε την τρέχουσα κατηγορία για τη φόρμα των κουπονιών
+                    currentCategory = data.category || 'Εστίαση';
                 }
             } catch (err) { console.error("Error loading profile:", err); }
+        }
+
+        // Μικρή συνάρτηση για να ξέρει η καρτέλα των κουπονιών τον σωστό κλάδο από τη βάση
+        async function loadMerchantCategoryOnly() {
+            try {
+                const { data } = await supaClient.from('merchants').select('category').eq('id', MERCHANT_ID).single();
+                if(data && data.category) {
+                    currentCategory = data.category;
+                    updateFormUI();
+                }
+            } catch(e){}
         }
 
         document.getElementById('profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('p-status');
             status.className = "mt-3 text-center text-xs font-medium text-yellow-400 block";
-            status.innerText = "Αποθήκευση...";
+            status.innerText = "Αποθήκευση και συγχρονισμός δεδομένων...";
+
+            const selectedCategory = document.getElementById('p-category').value;
 
             const updateData = {
+                name: document.getElementById('p-name').value,
+                category: selectedCategory,
                 logo_url: document.getElementById('p-logo').value,
+                banner_url: document.getElementById('p-banner').value,
                 address: document.getElementById('p-address').value,
+                phone: document.getElementById('p-phone').value,
                 bio: document.getElementById('p-bio').value,
+                website: document.getElementById('p-website').value,
                 opening_hours: { text: document.getElementById('p-hours').value },
                 social_links: {
                     instagram: document.getElementById('p-ig').value,
@@ -227,35 +274,36 @@
             try {
                 const { error } = await supaClient.from('merchants').update(updateData).eq('id', MERCHANT_ID);
                 if (error) throw error;
+                
+                currentCategory = selectedCategory; // Ενημερώνουμε την τοπική μεταβλητή
                 status.className = "mt-3 text-center text-xs font-medium text-emerald-400 block";
-                status.innerText = "🎉 Το προφίλ ενημερώθηκε επιτυχώς!";
+                status.innerText = "🎉 Το προφίλ και η κατηγορία αποθηκεύτηκαν επιτυχώς στη βάση!";
                 setTimeout(() => status.classList.add('hidden'), 4000);
             } catch (err) {
                 status.className = "mt-3 text-center text-xs font-medium text-red-400 block";
-                status.innerText = "❌ Σφάλμα: Ελέγξτε τα RLS policies του Supabase (merchants table).";
+                status.innerText = "❌ Σφάλμα κατά την αποθήκευση: " + err.message;
             }
         });
 
-        // --- 3. ΠΑΛΙΕΣ ΛΕΙΤΟΥΡΓΙΕΣ ΚΟΥΠΟΝΙΩΝ ---
+        // --- 3. ΛΕΙΤΟΥΡΓΙΕΣ ΚΟΥΠΟΝΙΩΝ ---
         function updateFormUI() {
             document.getElementById('category-badge').innerText = currentCategory;
             const offerBlock = document.getElementById('offer-field-block');
             const mechBlock = document.getElementById('mechanism-field-block');
 
             if (currentType === 'Tiered') {
-                offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Κλιμάκια (Tiers)</label><textarea id="c-discount" required rows="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#22D3EE] text-white" placeholder="π.χ. Ξόδεψε 5€ -> 10%"></textarea>`;
+                offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Κλιμάκια (Tiers)</label><textarea id="c-discount" required rows="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#22D3EE] text-white" placeholder="π.χ.\nΞόδεψε 5€ -> 10%\nΞόδεψε 10€ -> 20%"></textarea>`;
             } else {
-                let p = currentCategory === 'Υπηρεσίες' ? "π.χ. 19€/Μήνα" : "π.χ. -20% ή 1+1";
+                let p = currentCategory === 'Υπηρεσίες' ? "π.χ. 19€/Μήνα ή -40% στη συνδρομή" : "π.χ. -20% ή 1+1 Δώρο";
                 offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Η Προσφορά σας</label><input type="text" id="c-discount" required placeholder="${p}" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">`;
             }
 
             if (currentType === 'Standard') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-gray-400">📅 Λήξη</p><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
-            else if (currentType === 'Flash') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-amber-400">⚡ Flash Sale</p><input type="number" id="c-flash-mins" value="45" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="hidden" id="c-expiry" value="${new Date(Date.now()+86400000).toISOString().split('T')[0]}">`;
+            else if (currentType === 'Flash') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-amber-400">⚡ Flash Sale (FOMO)</p><input type="number" id="c-flash-mins" value="45" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="hidden" id="c-expiry" value="${new Date(Date.now()+86400000).toISOString().split('T')[0]}">`;
             else if (currentType === 'Tiered') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-purple-400">📈 Tiers</p><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
             else if (currentType === 'Group') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-teal-400">👥 Ελάχιστα Άτομα</p><input type="number" id="c-group-people" value="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
         }
 
-        window.changeCategory = (v) => { currentCategory = v; updateFormUI(); };
         window.changeType = (v) => { currentType = v; updateFormUI(); };
 
         async function fetchCampaigns() {
@@ -317,7 +365,11 @@
             } catch(err) { status.className = "mt-2 text-center text-xs font-medium text-red-400 block"; status.innerText = "Σφάλμα!"; }
         });
 
-        window.addEventListener('DOMContentLoaded', () => { updateFormUI(); fetchCampaigns(); });
+        // Αρχική φόρτωση
+        window.addEventListener('DOMContentLoaded', () => { 
+            loadMerchantCategoryOnly(); 
+            fetchCampaigns(); 
+        });
     </script>
 </body>
 </html>
