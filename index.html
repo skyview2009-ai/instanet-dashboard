@@ -107,11 +107,11 @@
         // 📊 1. ΦΟΡΤΩΣΗ ΣΤΑΤΙΣΤΙΚΩΝ ΚΑΙ ΠΙΝΑΚΑ ΑΠΟ ΤΟ SUPABASE
         async function loadDashboardData() {
             try {
-                // Προσοχή: Χρησιμοποιούμε το supaClient πλέον!
+                // ΕΔΩ ΕΓΙΝΕ Η ΑΛΛΑΓΗ: redeemed_at αντί για created_at
                 const { data: redemptions, error: rError } = await supaClient
                     .from('redemptions')
                     .select('*')
-                    .order('created_at', { ascending: false });
+                    .order('redeemed_at', { ascending: false });
 
                 if (rError) throw rError;
 
@@ -133,7 +133,8 @@
                 }
 
                 tableBody.innerHTML = redemptions.map(r => {
-                    const date = new Date(r.created_at).toLocaleString('el-GR', { hour12: false });
+                    // ΕΔΩ ΕΓΙΝΕ Η ΑΛΛΑΓΗ: r.redeemed_at
+                    const date = new Date(r.redeemed_at).toLocaleString('el-GR', { hour12: false });
                     return `
                         <tr class="hover:bg-[#0F172A]/30 transition">
                             <td class="p-4 font-mono text-xs text-[#22D3EE]">${r.student_id ? r.student_id.substring(0, 8) : '---'}...</td>
