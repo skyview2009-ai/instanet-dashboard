@@ -164,12 +164,13 @@
 
             try {
                 const { error } = await supabase
-                    .from('coupons')
-                    .insert([{ 
-                        title: title, 
-                        discount_value: discount, 
-                        expires_at: new Date(expiry).toISOString() 
-                    }]);
+  .from('coupons')
+  .insert([{
+     title: title,
+     description: "Έκπτωση: " + discount + "% | Λήξη: " + expiry,
+     is_active: true,
+     merchant_id: "00000000-0000-0000-0000-000000000000"
+  }]);
 
                 if (error) throw error;
 
