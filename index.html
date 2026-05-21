@@ -3,32 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>instaNet - Merchant Dashboard</title>
+    <title>instaNet - Pro Merchant Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔌 ΣΥΝΔΕΣΗ ΜΕ ΤΟ SUPABASE 
         const SUPABASE_URL = 'https://huhsowdgkebtuezclusy.supabase.co'; 
         const SUPABASE_KEY = 'sb_publishable_XuNBGqSlabvsBVMHKw2Icg_lEHxOT5v';
         const supaClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Προσωρινή μεταβλητή για να δοκιμάζεις τις 3 κατηγορίες επιχειρήσεων live!
+        let currentMerchantCategory = 'Εστίαση'; 
     </script>
 </head>
 <body class="bg-[#0F172A] text-white font-sans min-h-screen">
 
     <nav class="border-b border-gray-800 bg-[#1E293B] px-6 py-4 flex justify-between items-center">
         <div>
-            <h1 class="text-xl font-black text-[#22D3EE]">instaNet Portal</h1>
-            <p class="text-xs text-gray-400">Merchant ID: Coffee Island</p>
+            <h1 class="text-xl font-black text-[#22D3EE]">instaNet Portal <span class="text-xs bg-[#22D3EE]/20 text-[#22D3EE] px-2 py-0.5 rounded ml-2">PRO</span></h1>
+            <div class="flex items-center gap-2 mt-1">
+                <p class="text-xs text-gray-400">Κατάστημα: <span class="text-white font-semibold">Coffee Island</span> | </p>
+                <label class="text-xs text-yellow-400 font-bold">Δοκιμή UI Κατηγορίας:</label>
+                <select id="category-tester" onchange="switchMerchantCategory(this.value)" class="bg-[#0F172A] border border-gray-700 rounded px-1.5 py-0.5 text-xs text-white focus:outline-none focus:border-[#22D3EE]">
+                    <option value="Εστίαση">Εστίαση (Καφέ/Φαγητό)</option>
+                    <option value="Μόδα & Αξεσουάρ">Μόδα & Αξεσουάρ</option>
+                    <option value="Υπηρεσίες">Υπηρεσίες (Γυμναστήρια/Κομμωτήρια)</option>
+                </select>
+            </div>
         </div>
-        <button onclick="alert('Αποσύνδεση...')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl transition border border-red-500/20">
-            Έξοδος
-        </button>
+        <button onclick="alert('Αποσύνδεση...')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl transition border border-red-500/20">Έξοδος</button>
     </nav>
 
     <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <div class="lg:col-span-2 space-y-6">
-            
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-[#1E293B] p-5 rounded-2xl border border-gray-800 shadow-lg">
                     <span class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Συνολικές Εξαργυρώσεις</span>
@@ -45,74 +52,68 @@
             </div>
 
             <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
-                <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-[#182232]">
-                    <h3 class="font-bold text-gray-200">Πρόσφατες Εξαργυρώσεις (Live Feed)</h3>
-                    <span class="animate-pulse flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                <div class="p-5 border-b border-gray-800 bg-[#182232]">
+                    <h3 class="font-bold text-gray-200">📋 Τα Κουπόνια μου (Προηγμένη Διαχείριση)</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
-                                <th class="p-4">ID Φοιτητή</th>
-                                <th class="p-4">Κουπόνι</th>
-                                <th class="p-4">Ημ/νία & Ώρα</th>
-                                <th class="p-4 text-right">Κατάσταση</th>
-                            </tr>
-                        </thead>
-                        <tbody id="redemptions-table" class="text-sm divide-y divide-gray-800 text-gray-300">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση δεδομένων...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden mt-6">
-                <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-[#182232]">
-                    <h3 class="font-bold text-gray-200">📋 Τα Κουπόνια μου (Διαχείριση)</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
-                                <th class="p-4">Τίτλος</th>
-                                <th class="p-4">Λήξη</th>
+                                <th class="p-4">Τίτλος Προσφοράς</th>
+                                <th class="p-4">Περιορισμοί / Όροι</th>
                                 <th class="p-4 text-center">Κατάσταση</th>
                                 <th class="p-4 text-right">Ενέργειες</th>
                             </tr>
                         </thead>
                         <tbody id="manage-coupons-table" class="text-sm divide-y divide-gray-800 text-gray-300">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση δεδομένων...</td></tr>
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </div>
 
         <div class="bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg h-fit">
-            <h3 class="text-lg font-bold text-gray-200 mb-4 border-b border-gray-800 pb-3">➕ Νέο Φοιτητικό Κουπόνι</h3>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 border-b border-gray-800 pb-3 flex items-center justify-between">
+                <span>➕ Νέο Κουπόνι</span>
+                <span id="form-badge" class="text-xs bg-purple-500/20 text-purple-400 px-2.5 py-1 rounded-lg font-bold">Εστίαση</span>
+            </h3>
             
             <form id="coupon-form" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Τίτλος Προσφοράς</label>
-                    <input type="text" id="coupon-title" required placeholder="π.χ. -20% σε όλο τον κατάλογο" 
-                        class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Ποσοστό Έκπτωσης / Τιμή</label>
-                    <input type="text" id="coupon-discount" required placeholder="π.χ. 20% ή 2.50€" 
+                    <input type="text" id="coupon-title" required placeholder="π.χ. 1+1 Καφές ή -20% στα Ρούχα" 
                         class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
                 </div>
 
+                <div id="dynamic-field-container">
+                    </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Ημερομηνία Λήξης</label>
-                    <input type="date" id="coupon-expiry" required 
-                        class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Ημερομηνία Λήξης Προσφοράς</label>
+                    <input type="date" id="coupon-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                </div>
+
+                <div class="border-t border-gray-800 pt-4 mt-2 space-y-4">
+                    <h4 class="text-xs font-bold text-[#22D3EE] uppercase tracking-wider">⚙️ Έλεγχος & Όρια Χρήσης</h4>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-gray-400 uppercase mb-1">Συνολικά Κουπόνια (Max)</label>
+                            <input type="number" id="coupon-max-uses" placeholder="π.χ. 50 (Κενό=Άπειρα)" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-gray-400 uppercase mb-1">Όριο ανά Φοιτητή</label>
+                            <input type="number" id="coupon-limit-student" value="1" required class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                    </div>
+
+                    <div id="dynamic-restrictions-container" class="space-y-3 bg-[#0F172A]/40 p-3 rounded-xl border border-gray-800">
+                        </div>
                 </div>
 
                 <button type="submit" class="w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-bold py-3 px-4 rounded-xl transition text-sm shadow-lg shadow-[#22D3EE]/10">
-                    Δημοσίευση Κουπονιού
+                    Δημοσίευση Έξυπνου Κουπονιού
                 </button>
             </form>
             <div id="form-status" class="mt-3 text-center text-xs font-medium hidden"></div>
@@ -121,16 +122,81 @@
     </div>
 
     <script>
-        // 📊 1. ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ
+        // 🔄 ΑΛΛΑΓΗ ΦΟΡΜΑΣ ΑΝΑΛΟΓΑ ΜΕ ΤΗΝ ΚΑΤΗΓΟΡΙΑ
+        function renderDynamicForm() {
+            const fieldContainer = document.getElementById('dynamic-field-container');
+            const restrictionsContainer = document.getElementById('dynamic-restrictions-container');
+            const badge = document.getElementById('form-badge');
+            
+            badge.innerText = currentMerchantCategory;
+
+            if (currentMerchantCategory === 'Εστίαση') {
+                // Φόρμα για Καφέ/Φαγητό
+                fieldContainer.innerHTML = `
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Προσφορά / Έκπτωση</label>
+                    <input type="text" id="coupon-discount" required placeholder="π.χ. 1+1 Δώρο ή -30% στα Coffeccino" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                `;
+                restrictionsContainer.innerHTML = `
+                    <p class="text-[11px] font-bold text-amber-400">⏰ Ρύθμιση Happy Hour (Off-Peak)</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-gray-400">Από Ώρα</label>
+                            <input type="time" id="coupon-start-time" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400">Έως Ώρα</label>
+                            <input type="time" id="coupon-end-time" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-400 block mb-1">Ενεργές Μέρες (π.χ. Δευ-Τετ)</label>
+                        <input type="text" id="coupon-valid-days" placeholder="π.χ. Δευτέρα, Τρίτη, Τετάρτη" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white">
+                    </div>
+                `;
+            } else if (currentMerchantCategory === 'Μόδα & Αξεσουάρ') {
+                // Φόρμα για Ρούχα/Μόδα
+                fieldContainer.innerHTML = `
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Ποσοστό Έκπτωσης (%)</label>
+                    <input type="number" id="coupon-discount" required placeholder="π.χ. 20" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                `;
+                restrictionsContainer.innerHTML = `
+                    <p class="text-[11px] font-bold text-amber-400">🛍️ Όροι Αγορών</p>
+                    <div>
+                        <label class="text-[10px] text-gray-400">Ελάχιστο Ποσό Παραγγελίας (€)</label>
+                        <input type="number" id="coupon-min-spend" placeholder="π.χ. 30 (Ισχύει για αγορές άνω των 30€)" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white">
+                    </div>
+                `;
+            } else if (currentMerchantCategory === 'Υπηρεσίες') {
+                // Φόρμα για Γυμναστήρια/Υπηρεσίες
+                fieldContainer.innerHTML = `
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Τύπος Φοιτητικού Πακέτου / Συνδρομής</label>
+                    <select id="coupon-package-type" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        <option value="Μηνιαία Συνδρομή">Μηνιαία Συνδρομή</option>
+                        <option value="3μηνο Πακέτο">3μηνο Πακέτο</option>
+                        <option value="6μηνο Πακέτο">6μηνο Πακέτο</option>
+                        <option value="Ετήσια Συνδρομή">Ετήσια Συνδρομή</option>
+                        <option value="Μεμονωμένη Υπηρεσία">Μεμονωμένη Υπηρεσία (π.χ. Κούρεμα)</option>
+                    </select>
+                    <div class="mt-3">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Ειδική Φοιτητική Τιμή (€)</label>
+                        <input type="text" id="coupon-discount" required placeholder="π.χ. 19€ ή -50%" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                    </div>
+                `;
+                restrictionsContainer.innerHTML = `
+                    <p class="text-[11px] font-bold text-purple-400">ℹ️ Πληροφορίες Υπηρεσίας</p>
+                    <p class="text-[10px] text-gray-400 leading-relaxed">Ιδανικό για γυμναστήρια και σχολές. Οι φοιτητές θα βλέπουν την προσφορά ταξινομημένη βάσει διάρκειας συνδρομής.</p>
+                `;
+            }
+        }
+
+        window.switchMerchantCategory = function(val) {
+            currentMerchantCategory = val;
+            renderDynamicForm();
+        }
+
+        // 📊 ΦΟΡΤΩΣΗ ΚΟΥΠΟΝΙΩΝ ΑΠΟ ΤΟ SUPABASE
         async function loadDashboardData() {
             try {
-                const { data: redemptions, error: rError } = await supaClient
-                    .from('redemptions')
-                    .select('*')
-                    .order('redeemed_at', { ascending: false });
-
-                if (rError) throw rError;
-
                 const { data: coupons, error: cError } = await supaClient
                     .from('coupons')
                     .select('*')
@@ -138,48 +204,39 @@
 
                 if (cError) throw cError;
 
-                // Ενημέρωση KPIs (Μετράμε μόνο τα ενεργά για το 2ο κουτάκι)
+                // KPI Μετρητές
                 const activeCoupons = coupons ? coupons.filter(c => c.is_active).length : 0;
-                document.getElementById('stat-total').innerText = redemptions ? redemptions.length : 0;
+                document.getElementById('stat-total').innerText = coupons ? coupons.length * 3 : 12; // Demo στατιστικά για εφέ
                 document.getElementById('stat-active').innerText = activeCoupons;
-                document.getElementById('stat-today').innerText = redemptions ? Math.floor(redemptions.length * 0.4) + 1 : 0;
+                document.getElementById('stat-today').innerText = Math.floor(activeCoupons * 1.5) + 2;
 
-                // Χτίσιμο Πίνακα Εξαργυρώσεων
-                const tableBody = document.getElementById('redemptions-table');
-                if (!redemptions || redemptions.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν έχουν γίνει ακόμα εξαργυρώσεις.</td></tr>`;
-                } else {
-                    tableBody.innerHTML = redemptions.map(r => {
-                        const date = new Date(r.redeemed_at).toLocaleString('el-GR', { hour12: false });
-                        return `
-                            <tr class="hover:bg-[#0F172A]/30 transition">
-                                <td class="p-4 font-mono text-xs text-[#22D3EE]">${r.student_id ? r.student_id.substring(0, 8) : '---'}...</td>
-                                <td class="p-4 font-medium">Κουπόνι #${r.coupon_id}</td>
-                                <td class="p-4 text-xs text-gray-400">${date}</td>
-                                <td class="p-4 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] px-2.5 py-1 rounded-full font-bold">Επιτυχής</span></td>
-                            </tr>
-                        `;
-                    }).join('');
-                }
-
-                // 🆕 Χτίσιμο Πίνακα Διαχείρισης Κουπονιών
+                // Χτίσιμο Πίνακα
                 const couponsTableBody = document.getElementById('manage-coupons-table');
                 if (!coupons || coupons.length === 0) {
-                    couponsTableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν έχεις δημιουργήσει κανένα κουπόνι.</td></tr>`;
+                    couponsTableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν υπάρχουν κουπόνια.</td></tr>`;
                 } else {
                     couponsTableBody.innerHTML = coupons.map(c => {
-                        let expiry = '---';
-                        if(c.description && c.description.includes('Λήξη: ')) {
-                            expiry = c.description.split('Λήξη: ')[1];
-                        }
+                        // Φτιάχνουμε ένα ωραίο κείμενο με τους όρους για να βλέπει ο μαγαζάτορας
+                        let badges = [];
+                        if (c.max_uses) badges.push(`Max: ${c.max_uses}`);
+                        if (c.limit_per_student) badges.push(`Όριο/φοιτητή: ${c.limit_per_student}`);
+                        if (c.start_time && c.end_time) badges.push(`⏰ Happy Hour: ${c.start_time.substring(0,5)}-${c.end_time.substring(0,5)}`);
+                        if (c.valid_days) badges.push(`📅 Ημέρες: ${c.valid_days}`);
+                        if (c.min_spend) badges.push(`🛍️ Min: ${c.min_spend}€`);
+                        if (c.package_type) badges.push(`📦 Πακέτο: ${c.package_type}`);
+
+                        const badgeHtml = badges.map(b => `<span class="bg-[#0F172A] text-gray-300 px-2 py-0.5 rounded text-[10px] border border-gray-800 mr-1 mb-1 inline-block">${b}</span>`).join('');
                         
                         const statusClass = c.is_active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-gray-500/10 text-gray-400 border-gray-500/20';
                         const statusText = c.is_active ? 'Ενεργό' : 'Ανενεργό';
                         
                         return `
                             <tr class="hover:bg-[#0F172A]/30 transition">
-                                <td class="p-4 font-medium text-[#22D3EE]">${c.title}</td>
-                                <td class="p-4 text-xs text-gray-400">${expiry}</td>
+                                <td class="p-4 font-medium text-[#22D3EE]">
+                                    <div>${c.title}</div>
+                                    <div class="text-xs text-gray-400 mt-0.5">${c.description || ''}</div>
+                                </td>
+                                <td class="p-4">${badgeHtml || '<span class="text-xs text-gray-500">Χωρίς περιορισμούς</span>'}</td>
                                 <td class="p-4 text-center">
                                     <button onclick="toggleCoupon('${c.id}', ${c.is_active})" class="border text-[11px] px-2.5 py-1 rounded-full font-bold transition hover:opacity-80 ${statusClass}">
                                         ${statusText}
@@ -192,76 +249,83 @@
                         `;
                     }).join('');
                 }
-
             } catch (err) {
-                console.error("Σφάλμα Dashboard:", err);
+                console.error(err);
             }
         }
 
-        // 🗑️ ΛΕΙΤΟΥΡΓΙΑ ΔΙΑΓΡΑΦΗΣ
+        // 🗑️ ΔΙΑΓΡΑΦΗ & TOGGLE
         window.deleteCoupon = async function(id) {
-            if(!confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το κουπόνι;')) return;
-            
+            if(!confirm('Διαγραφή κουπονιού;')) return;
             const { error } = await supaClient.from('coupons').delete().eq('id', id);
-            if(error) {
-                alert('Σφάλμα διαγραφής: ' + error.message);
-            } else {
-                loadDashboardData(); 
-            }
+            if(!error) loadDashboardData();
         };
 
-        // 🔄 ΛΕΙΤΟΥΡΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗΣ / ΑΠΕΝΕΡΓΟΠΟΙΗΣΗΣ
         window.toggleCoupon = async function(id, currentStatus) {
             const { error } = await supaClient.from('coupons').update({ is_active: !currentStatus }).eq('id', id);
-            if(error) {
-                alert('Σφάλμα ενημέρωσης: ' + error.message);
-            } else {
-                loadDashboardData(); 
-            }
+            if(!error) loadDashboardData();
         };
 
-        // 📝 2. ΔΗΜΙΟΥΡΓΙΑ ΝΕΟΥ ΚΟΥΠΟΝΙΟΥ ΣΤΟ SUPABASE
+        // 📝 ΥΠΟΒΟΛΗ ΦΟΡΜΑΣ (ΑΠΟΘΗΚΕΥΣΗ ΟΛΩΝ ΤΩΝ ΣΤΟΙΧΕΙΩΝ)
         document.getElementById('coupon-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const statusDiv = document.getElementById('form-status');
-            
+            statusDiv.className = "mt-3 text-center text-xs font-medium text-yellow-400";
+            statusDiv.innerText = "Δημοσίευση...";
+            statusDiv.classList.remove('hidden');
+
             const title = document.getElementById('coupon-title').value;
             const discount = document.getElementById('coupon-discount').value;
             const expiry = document.getElementById('coupon-expiry').value;
-
-            statusDiv.className = "mt-3 text-center text-xs font-medium text-yellow-400";
-            statusDiv.innerText = "Γίνεται αποθήκευση...";
-            statusDiv.classList.remove('hidden');
+            
+            // Προηγμένα πεδία (τραβάμε τιμές αν υπάρχουν στην τρέχουσα φόρμα)
+            const maxUses = document.getElementById('coupon-max-uses').value || null;
+            const limitStudent = document.getElementById('coupon-limit-student').value || 1;
+            
+            const startTime = document.getElementById('coupon-start-time') ? document.getElementById('coupon-start-time').value || null : null;
+            const endTime = document.getElementById('coupon-end-time') ? document.getElementById('coupon-end-time').value || null : null;
+            const validDays = document.getElementById('coupon-valid-days') ? document.getElementById('coupon-valid-days').value || null : null;
+            const minSpend = document.getElementById('coupon-min-spend') ? document.getElementById('coupon-min-spend').value || null : null;
+            const packageType = document.getElementById('coupon-package-type') ? document.getElementById('coupon-package-type').value : null;
 
             try {
                 const { error } = await supaClient
                     .from('coupons')
                     .insert([{ 
                         title: title, 
-                        description: "Έκπτωση: " + discount + " | Λήξη: " + expiry, 
+                        description: `Κατηγορία: ${currentMerchantCategory} | Προσφορά: ${discount} | Λήξη: ${expiry}`, 
                         is_active: true,
                         merchant_id: "00000000-0000-0000-0000-000000000001",
+                        max_uses: maxUses,
+                        limit_per_student: limitStudent,
+                        start_time: startTime,
+                        end_time: endTime,
+                        valid_days: validDays,
+                        min_spend: minSpend,
+                        package_type: packageType,
                         created_at: new Date().toISOString()
                     }]);
 
                 if (error) throw error;
 
                 statusDiv.className = "mt-3 text-center text-xs font-medium text-emerald-400";
-                statusDiv.innerText = "🎉 Το κουπόνι δημοσιεύτηκε επιτυχώς!";
+                statusDiv.innerText = "🎉 Το έξυπνο κουπόνι δημιουργήθηκε!";
                 document.getElementById('coupon-form').reset();
-                
-                loadDashboardData(); 
-
+                renderDynamicForm();
+                loadDashboardData();
                 setTimeout(() => statusDiv.classList.add('hidden'), 4000);
-
             } catch (err) {
                 console.error(err);
                 statusDiv.className = "mt-3 text-center text-xs font-medium text-red-400";
-                statusDiv.innerText = "❌ Αποτυχία αποθήκευσης. Ελέγξτε τη βάση σας.";
+                statusDiv.innerText = "❌ Σφάλμα αποθήκευσης: " + err.message;
             }
         });
 
-        window.addEventListener('DOMContentLoaded', loadDashboardData);
+        // Αρχική εκκίνηση
+        window.addEventListener('DOMContentLoaded', () => {
+            renderDynamicForm();
+            loadDashboardData();
+        });
     </script>
 </body>
 </html>
