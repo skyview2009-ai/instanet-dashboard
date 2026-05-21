@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔌 ΣΥΝΔΕΣΗ ΜΕ ΤΟ SUPABASE (Από το instanet-business)
+        // 🔌 ΣΥΝΔΕΣΗ ΜΕ ΤΟ SUPABASE
         const SUPABASE_URL = 'https://huhsowdgkebtuezclusy.supabase.co'; 
         const SUPABASE_KEY = 'sb_publishable_XuNBGqSlabvsBVMHKw2Icg_1EHxOT5v';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -18,7 +18,7 @@
     <nav class="border-b border-gray-800 bg-[#1E293B] px-6 py-4 flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-[#22D3EE]">instaNet Portal</h1>
-            <p class="text-xs text-gray-400">Merchant ID: Καφέ_Κέντρο</p>
+            <p class="text-xs text-gray-400">Merchant ID: Coffee Island</p>
         </div>
         <button onclick="alert('Αποσύνδεση...')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl transition border border-red-500/20">
             Έξοδος
@@ -105,7 +105,6 @@
         // 📊 1. ΦΟΡΤΩΣΗ ΣΤΑΤΙΣΤΙΚΩΝ ΚΑΙ ΠΙΝΑΚΑ ΑΠΟ ΤΟ SUPABASE
         async function loadDashboardData() {
             try {
-                // Τραβάμε τις εξαργυρώσεις
                 const { data: redemptions, error: rError } = await supabase
                     .from('redemptions')
                     .select('*')
@@ -113,7 +112,6 @@
 
                 if (rError) throw rError;
 
-                // Τραβάμε τα κουπόνια
                 const { data: coupons, error: cError } = await supabase
                     .from('coupons')
                     .select('*');
@@ -125,7 +123,6 @@
                 document.getElementById('stat-active').innerText = coupons ? coupons.length : 0;
                 document.getElementById('stat-today').innerText = redemptions ? Math.floor(redemptions.length * 0.4) + 1 : 0;
 
-                // Χτίσιμο Πίνακα
                 const tableBody = document.getElementById('redemptions-table');
                 if (!redemptions || redemptions.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν έχουν γίνει ακόμα εξαργυρώσεις.</td></tr>`;
@@ -164,13 +161,14 @@
 
             try {
                 const { error } = await supabase
-  .from('coupons')
-  .insert([{
-     title: title,
-     description: "Έκπτωση: " + discount + "% | Λήξη: " + expiry,
-     is_active: true,
-     merchant_id: "00000000-0000-0000-0000-000000000001"
-  }]);
+                    .from('coupons')
+                    .insert([{ 
+                        title: title, 
+                        description: "Έκπτωση: " + discount + " | Λήξη: " + expiry, 
+                        is_active: true,
+                        merchant_id: "00000000-0000-0000-0000-000000000001",
+                        created_at: new Date().toISOString()
+                    }]);
 
                 if (error) throw error;
 
