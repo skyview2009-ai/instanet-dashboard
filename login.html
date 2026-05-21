@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>instaNet - Είσοδος Επιχείρησης</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://huhsowdgkebtuezclusy.supabase.co'; 
+        const SUPABASE_KEY = 'sb_publishable_XuNBGqSlabvsBVMHKw2Icg_lEHxOT5v';
+        const supaClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        let isLogin = true; 
+    </script>
+</head>
+<body class="bg-[#0F172A] text-white font-sans min-h-screen flex items-center justify-center relative overflow-hidden">
+
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#22D3EE] opacity-20 rounded-full blur-[100px]"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-500 opacity-20 rounded-full blur-[100px]"></div>
+
+    <div class="bg-[#1E293B] border border-gray-800 p-8 rounded-3xl shadow-2xl w-full max-w-md relative z-10">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black text-[#22D3EE] tracking-tight">insta<span class="text-white">Net</span></h1>
+            <p class="text-gray-400 text-sm mt-2 font-medium" id="form-subtitle">Κέντρο Ελέγχου Επιχειρήσεων</p>
+        </div>
+
+        <form id="auth-form" class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Email</label>
+                <input type="email" id="auth-email" required placeholder="name@business.com" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#22D3EE] transition-colors text-white">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Κωδικός Πρόσβασης</label>
+                <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#22D3EE] transition-colors text-white">
+            </div>
+
+            <button type="submit" id="auth-btn" class="w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-black py-4 px-4 rounded-xl transition text-sm tracking-wider uppercase mt-4">
+                ΕΙΣΟΔΟΣ
+            </button>
+            
+            <div id="auth-status" class="text-center text-xs font-bold hidden mt-3"></div>
+        </form>
+
+        <div class="mt-8 text-center border-t border-gray-800 pt-6">
+            <p class="text-sm text-gray-400">
+                <span id="toggle-text">Δεν έχετε λογαριασμό;</span>
+                <button onclick="toggleAuthMode()" id="toggle-btn" class="text-[#22D3EE] font-bold hover:underline ml-1 focus:outline-none">Δημιουργία Επιχείρησης</button>
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleAuthMode() {
+            isLogin = !isLogin;
+            document.getElementById('auth-btn').innerText = isLogin ? "ΕΙΣΟΔΟΣ" : "ΕΓΓΡΑΦΗ ΕΠΙΧΕΙΡΗΣΗΣ";
+            document.getElementById('form-subtitle').innerText = isLogin ? "Κέντρο Ελέγχου Επιχειρήσεων" : "Ξεκινήστε να προσελκύετε φοιτητές";
+            document.getElementById('toggle-text').innerText = isLogin ? "Δεν έχετε λογαριασμό;" : "Έχετε ήδη λογαριασμό;";
+            document.getElementById('toggle-btn').innerText = isLogin ? "Δημιουργία Επιχείρησης" : "Σύνδεση";
+            document.getElementById('auth-status').classList.add('hidden');
+        }
+
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const status = document.getElementById('auth-status');
+            
+            status.className = "text-center text-xs font-bold text-yellow-400 mt-3 block";
+            status.innerText = "Παρακαλώ περιμένετε...";
+
+            try {
+                if (isLogin) {
+                    // ΕΙΣΟΔΟΣ
+                    const { data, error } = await supaClient.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    
+                    status.className = "text-center text-xs font-bold text-emerald-400 mt-3 block";
+                    status.innerText = "Επιτυχής Σύνδεση! Μεταφορά στο Dashboard...";
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                    
+                } else {
+                    // ΕΓΓΡΑΦΗ
+                    const { data: authData, error: authError } = await supaClient.auth.signUp({ email, password });
+                    if (authError) throw authError;
+
+                    if (authData.user) {
+                        // Δημιουργούμε αυτόματα μια κενή γραμμή προφίλ συνδεδεμένη με αυτόν τον χρήστη
+                        const { error: merchantError } = await supaClient.from('merchants').insert([{
+                            owner_id: authData.user.id,
+                            name: 'Νέο Κατάστημα',
+                            category: 'Εστίαση'
+                        }]);
+                        if (merchantError) throw merchantError;
+                    }
+
+                    status.className = "text-center text-xs font-bold text-emerald-400 mt-3 block";
+                    status.innerText = "Ο λογαριασμός δημιουργήθηκε! Μεταφορά...";
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+                }
+            } catch (err) {
+                status.className = "text-center text-xs font-bold text-red-400 mt-3 block";
+                status.innerText = "❌ Σφάλμα: " + (err.message === "Invalid login credentials" ? "Λάθος email ή κωδικός" : err.message);
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data } = await supaClient.auth.getSession();
+            if (data.session) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
