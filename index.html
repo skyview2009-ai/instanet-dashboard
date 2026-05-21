@@ -13,6 +13,7 @@
         
         let currentCategory = 'Εστίαση';
         let currentType = 'Standard';
+        const MERCHANT_ID = "00000000-0000-0000-0000-000000000001"; // Το ID του Coffee Island
     </script>
 </head>
 <body class="bg-[#0F172A] text-white font-sans min-h-screen">
@@ -22,11 +23,11 @@
             <h1 class="text-xl font-black text-[#22D3EE]">instaNet Portal <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded ml-2">ULTIMATE ENGINE</span></h1>
             <div class="flex items-center gap-4 mt-1">
                 <div class="flex items-center gap-1.5 text-xs text-gray-400">
-                    <span>Κλάδος Επιχείρησης:</span>
+                    <span>Κλάδος:</span>
                     <select id="category-select" onchange="changeCategory(this.value)" class="bg-[#0F172A] border border-gray-700 rounded px-2 py-0.5 text-white font-semibold focus:outline-none focus:border-[#22D3EE]">
                         <option value="Εστίαση">☕ Εστίαση (Καφέ/Φαγητό)</option>
                         <option value="Λιανική">🛍️ Λιανική (Μόδα/Προϊόντα)</option>
-                        <option value="Υπηρεσίες">🏋️‍♂️ Υπηρεσίες (Γυμναστήρια/Εξορμήσεις)</option>
+                        <option value="Υπηρεσίες">🏋️‍♂️ Υπηρεσίες (Γυμναστήρια)</option>
                     </select>
                 </div>
             </div>
@@ -34,227 +35,286 @@
         <button onclick="alert('Αποσύνδεση...')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl border border-red-500/20">Έξοδος</button>
     </nav>
 
-    <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="max-w-7xl mx-auto p-6">
         
-        <div class="lg:col-span-2 space-y-6">
-            <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
-                <div class="p-5 border-b border-gray-800 bg-[#182232]">
-                    <h3 class="font-bold text-gray-200">📋 Ενεργές Καμπάνιες & Έξυπνα Κουπόνια</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
-                                <th class="p-4">Προσφορά / Καμπάνια</th>
-                                <th class="p-4">Μηχανισμός / Όροι</th>
-                                <th class="p-4 text-center">Κατάσταση</th>
-                                <th class="p-4 text-right">Ενέργειες</th>
-                            </tr>
-                        </thead>
-                        <tbody id="coupons-table-body" class="text-sm divide-y divide-gray-800 text-gray-300">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="flex gap-4 mb-8 border-b border-gray-800 pb-4">
+            <button onclick="switchTab('coupons')" id="tab-btn-coupons" class="bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm">🎫 Διαχείριση Κουπονιών</button>
+            <button onclick="switchTab('profile')" id="tab-btn-profile" class="bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm">🏪 Προφίλ Καταστήματος</button>
         </div>
 
-        <div class="bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg h-fit space-y-4">
-            <h3 class="text-lg font-bold text-gray-200 border-b border-gray-800 pb-3 flex justify-between items-center">
-                <span>🚀 Δημιουργία Καμπάνιας</span>
-                <span id="category-badge" class="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded font-bold">Εστίαση</span>
-            </h3>
-
-            <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">1. Επιλέξτε Μηχανισμό Πωλήσεων</label>
-                <select id="type-select" onchange="changeType(this.value)" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white font-medium">
-                    <option value="Standard">🎯 Κλασική Έκπτωση (Standard)</option>
-                    <option value="Flash">⚡ Αστραπιαία Προσφορά (Flash Sale / FOMO)</option>
-                    <option value="Tiered">📈 Κλιμακωτή Επιβράβευση (Περισσότερα = Μεγαλύτερη Έκπτωση)</option>
-                    <option value="Group">👥 "Φέρε την Παρέα σου" (Social / Viral)</option>
-                </select>
+        <div id="tab-content-coupons" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
+                    <div class="p-5 border-b border-gray-800 bg-[#182232]">
+                        <h3 class="font-bold text-gray-200">📋 Ενεργές Καμπάνιες & Έξυπνα Κουπόνια</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
+                                    <th class="p-4">Προσφορά / Καμπάνια</th>
+                                    <th class="p-4">Μηχανισμός / Όροι</th>
+                                    <th class="p-4 text-center">Κατάσταση</th>
+                                    <th class="p-4 text-right">Ενέργειες</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coupons-table-body" class="text-sm divide-y divide-gray-800 text-gray-300">
+                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <form id="campaign-form" class="space-y-4">
+            <div class="bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg h-fit space-y-4">
+                <h3 class="text-lg font-bold text-gray-200 border-b border-gray-800 pb-3 flex justify-between items-center">
+                    <span>🚀 Δημιουργία Καμπάνιας</span>
+                    <span id="category-badge" class="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded font-bold">Εστίαση</span>
+                </h3>
+
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">2. Τίτλος / Όνομα Καμπάνιας</label>
-                    <input type="text" id="c-title" required placeholder="π.χ. Happy Hour Φοιτητών ή Group Gym Discount" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">1. Μηχανισμός Πωλήσεων</label>
+                    <select id="type-select" onchange="changeType(this.value)" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        <option value="Standard">🎯 Κλασική Έκπτωση</option>
+                        <option value="Flash">⚡ Flash Sale (FOMO)</option>
+                        <option value="Tiered">📈 Κλιμακωτή Επιβράβευση</option>
+                        <option value="Group">👥 "Φέρε την Παρέα σου"</option>
+                    </select>
                 </div>
 
-                <div id="offer-field-block"></div>
-
-                <div id="mechanism-field-block" class="bg-[#0F172A]/50 p-3 rounded-xl border border-gray-800 space-y-3"></div>
-
-                <div class="border-t border-gray-800 pt-3 grid grid-cols-2 gap-3">
+                <form id="campaign-form" class="space-y-4">
                     <div>
-                        <label class="block text-[10px] text-gray-400 uppercase">Συνολικά Κουπόνια (Στοκ)</label>
-                        <input type="number" id="c-max" placeholder="Άπειρα" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">2. Όνομα Καμπάνιας</label>
+                        <input type="text" id="c-title" required placeholder="π.χ. Happy Hour Φοιτητών" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
                     </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-400 uppercase">Όριο ανά Φοιτητή</label>
-                        <input type="number" id="c-limit" value="1" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
+                    <div id="offer-field-block"></div>
+                    <div id="mechanism-field-block" class="bg-[#0F172A]/50 p-3 rounded-xl border border-gray-800 space-y-3"></div>
+                    <div class="border-t border-gray-800 pt-3 grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-gray-400 uppercase">Max Κουπόνια</label>
+                            <input type="number" id="c-max" placeholder="Άπειρα" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 uppercase">Όριο/Φοιτητή</label>
+                            <input type="number" id="c-limit" value="1" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
+                        </div>
                     </div>
-                </div>
-
-                <button type="submit" class="w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-bold py-3 px-4 rounded-xl transition text-sm shadow-lg shadow-[#22D3EE]/10">
-                    Ενεργοποίηση Καμπάνιας 🚀
-                </button>
-            </form>
-            <div id="f-status" class="mt-2 text-center text-xs font-medium hidden"></div>
+                    <button type="submit" class="w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-bold py-3 px-4 rounded-xl transition text-sm">Ενεργοποίηση Καμπάνιας 🚀</button>
+                </form>
+                <div id="f-status" class="mt-2 text-center text-xs font-medium hidden"></div>
+            </div>
         </div>
+
+        <div id="tab-content-profile" class="hidden">
+            <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg p-8 max-w-3xl mx-auto">
+                <div class="flex items-center gap-4 border-b border-gray-800 pb-6 mb-6">
+                    <div class="bg-[#0F172A] p-4 rounded-full border border-gray-700">
+                        <span class="text-3xl">🏪</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Ψηφιακή Βιτρίνα</h2>
+                        <p class="text-gray-400 text-sm mt-1">Πώς βλέπουν οι φοιτητές το κατάστημά σας στο instaNet App.</p>
+                    </div>
+                </div>
+
+                <form id="profile-form" class="space-y-6">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμος Λογότυπου (URL Image)</label>
+                            <input type="text" id="p-logo" placeholder="π.χ. https://site.com/logo.png" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                            <p class="text-[10px] text-gray-500 mt-1">Αργότερα θα προσθέσουμε κουμπί Upload.</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Διεύθυνση / Τοποθεσία</label>
+                            <input type="text" id="p-address" placeholder="π.χ. Εγνατία 156, Θεσσαλονίκη" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Περιγραφή Καταστήματος (Bio)</label>
+                        <textarea id="p-bio" rows="3" placeholder="Γράψτε λίγα λόγια για το μαγαζί σας..." class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-800 pt-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Ώρες Λειτουργίας</label>
+                            <input type="text" id="p-hours" placeholder="π.χ. Δευ-Κυρ: 08:00 - 22:00" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-gray-400 uppercase">Social Media</label>
+                            <div class="flex items-center bg-[#0F172A] border border-gray-700 rounded-xl overflow-hidden">
+                                <span class="px-3 text-pink-500 font-bold border-r border-gray-700">IG</span>
+                                <input type="text" id="p-ig" placeholder="@username" class="w-full bg-transparent px-3 py-2 text-sm focus:outline-none text-white">
+                            </div>
+                            <div class="flex items-center bg-[#0F172A] border border-gray-700 rounded-xl overflow-hidden">
+                                <span class="px-3 text-white font-bold border-r border-gray-700">TT</span>
+                                <input type="text" id="p-tiktok" placeholder="@username" class="w-full bg-transparent px-3 py-2 text-sm focus:outline-none text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="mt-4 w-full bg-[#22D3EE] hover:bg-[#06B6D4] text-slate-900 font-bold py-3 px-4 rounded-xl transition text-sm shadow-lg shadow-[#22D3EE]/10">
+                        Αποθήκευση Προφίλ
+                    </button>
+                    <div id="p-status" class="text-center text-xs font-medium hidden mt-3"></div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // 🔄 ΔΥΝΑΜΙΚΟ ΡΕΝΤΕΡΑΡΙΣΜΑ ΦΟΡΜΑΣ
+        // --- 1. ΣΥΣΤΗΜΑ TABS ---
+        function switchTab(tabName) {
+            // Κρύβουμε/Εμφανίζουμε το περιεχόμενο
+            document.getElementById('tab-content-coupons').classList.add('hidden');
+            document.getElementById('tab-content-profile').classList.add('hidden');
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+
+            // Αλλάζουμε τα χρώματα στα κουμπιά
+            const btnC = document.getElementById('tab-btn-coupons');
+            const btnP = document.getElementById('tab-btn-profile');
+            
+            if(tabName === 'coupons') {
+                btnC.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
+                btnP.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
+            } else {
+                btnP.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
+                btnC.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
+                loadMerchantProfile(); // Φορτώνουμε τα δεδομένα όταν ανοίγει το Tab
+            }
+        }
+
+        // --- 2. ΛΕΙΤΟΥΡΓΙΕΣ ΠΡΟΦΙΛ ΚΑΤΑΣΤΗΜΑΤΟΣ ---
+        async function loadMerchantProfile() {
+            try {
+                const { data, error } = await supaClient.from('merchants').select('*').eq('id', MERCHANT_ID).single();
+                if (error) throw error;
+                if (data) {
+                    document.getElementById('p-logo').value = data.logo_url || '';
+                    document.getElementById('p-address').value = data.address || '';
+                    document.getElementById('p-bio').value = data.bio || '';
+                    
+                    // Επειδή είναι JSON, διαβάζουμε τις τιμές
+                    if(data.opening_hours) document.getElementById('p-hours').value = data.opening_hours.text || '';
+                    if(data.social_links) {
+                        document.getElementById('p-ig').value = data.social_links.instagram || '';
+                        document.getElementById('p-tiktok').value = data.social_links.tiktok || '';
+                    }
+                }
+            } catch (err) { console.error("Error loading profile:", err); }
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('p-status');
+            status.className = "mt-3 text-center text-xs font-medium text-yellow-400 block";
+            status.innerText = "Αποθήκευση...";
+
+            const updateData = {
+                logo_url: document.getElementById('p-logo').value,
+                address: document.getElementById('p-address').value,
+                bio: document.getElementById('p-bio').value,
+                opening_hours: { text: document.getElementById('p-hours').value },
+                social_links: {
+                    instagram: document.getElementById('p-ig').value,
+                    tiktok: document.getElementById('p-tiktok').value
+                }
+            };
+
+            try {
+                const { error } = await supaClient.from('merchants').update(updateData).eq('id', MERCHANT_ID);
+                if (error) throw error;
+                status.className = "mt-3 text-center text-xs font-medium text-emerald-400 block";
+                status.innerText = "🎉 Το προφίλ ενημερώθηκε επιτυχώς!";
+                setTimeout(() => status.classList.add('hidden'), 4000);
+            } catch (err) {
+                status.className = "mt-3 text-center text-xs font-medium text-red-400 block";
+                status.innerText = "❌ Σφάλμα: Ελέγξτε τα RLS policies του Supabase (merchants table).";
+            }
+        });
+
+        // --- 3. ΠΑΛΙΕΣ ΛΕΙΤΟΥΡΓΙΕΣ ΚΟΥΠΟΝΙΩΝ ---
         function updateFormUI() {
             document.getElementById('category-badge').innerText = currentCategory;
             const offerBlock = document.getElementById('offer-field-block');
             const mechBlock = document.getElementById('mechanism-field-block');
 
-            // Α. Διαμόρφωση Πεδίου Προσφοράς ανάλογα με τον Κλάδο & Μηχανισμό
             if (currentType === 'Tiered') {
-                offerBlock.innerHTML = `
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Ορίστε τα Κλιμάκια (Tiers)</label>
-                    <textarea id="c-discount" required rows="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#22D3EE] text-white" placeholder="π.χ.\nΞόδεψε 5€ -> Κέρδισε 10%\nΞόδεψε 10€ -> Κέρδισε 20%\nΞόδεψε 15€ -> ΔΩΡΟ Σνακ"></textarea>
-                `;
+                offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Κλιμάκια (Tiers)</label><textarea id="c-discount" required rows="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#22D3EE] text-white" placeholder="π.χ. Ξόδεψε 5€ -> 10%"></textarea>`;
             } else {
-                let placeholderText = "π.χ. -20% ή 1+1 Δώρο";
-                if(currentCategory === 'Υπηρεσίες') placeholderText = "π.χ. 19€/Μήνα ή 45€ η Εκδρομή";
-                offerBlock.innerHTML = `
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Η Προσφορά σας</label>
-                    <input type="text" id="c-discount" required placeholder="${placeholderText}" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
-                `;
+                let p = currentCategory === 'Υπηρεσίες' ? "π.χ. 19€/Μήνα" : "π.χ. -20% ή 1+1";
+                offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Η Προσφορά σας</label><input type="text" id="c-discount" required placeholder="${p}" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">`;
             }
 
-            // Β. Διαμόρφωση Ειδικών Όρων ανάλογα με τον Μηχανισμό (Flash, Group, κλπ.)
-            if (currentType === 'Standard') {
-                mechBlock.innerHTML = `
-                    <p class="text-[11px] font-bold text-gray-400">📅 Διάρκεια Καμπάνιας</p>
-                    <input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
-                `;
-            } else if (currentType === 'Flash') {
-                mechBlock.innerHTML = `
-                    <p class="text-[11px] font-bold text-amber-400">⚡ Ρυθμίσεις Flash Sale (FOMO)</p>
-                    <div>
-                        <label class="text-[10px] text-gray-400">Διάρκεια Αντίστροφης Μέτρησης (Λεπτά)</label>
-                        <input type="number" id="c-flash-mins" value="45" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white">
-                    </div>
-                    <input type="hidden" id="c-expiry" value="${new Date(Date.now()+86400000).toISOString().split('T')[0]}">
-                `;
-            } else if (currentType === 'Tiered') {
-                mechBlock.innerHTML = `
-                    <p class="text-[11px] font-bold text-purple-400">📈 Όροι Κλιμάκωσης</p>
-                    <p class="text-[10px] text-gray-400 leading-tight">Ο φοιτητής θα βλέπει μια μπάρα προόδου στο κινητό του που τον ωθεί να προσθέσει προϊόντα για να ξεκλειδώσει το επόμενο Tier.</p>
-                    <input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
-                `;
-            } else if (currentType === 'Group') {
-                mechBlock.innerHTML = `
-                    <p class="text-[11px] font-bold text-teal-400">👥 Όροι Κοινωνικής Εξαργύρωσης (Viral)</p>
-                    <div>
-                        <label class="text-[10px] text-gray-400">Ελάχιστα Άτομα στην Παρέα</label>
-                        <input type="number" id="c-group-people" value="3" min="2" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white">
-                    </div>
-                    <input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">
-                `;
-            }
+            if (currentType === 'Standard') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-gray-400">📅 Λήξη</p><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
+            else if (currentType === 'Flash') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-amber-400">⚡ Flash Sale</p><input type="number" id="c-flash-mins" value="45" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="hidden" id="c-expiry" value="${new Date(Date.now()+86400000).toISOString().split('T')[0]}">`;
+            else if (currentType === 'Tiered') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-purple-400">📈 Tiers</p><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
+            else if (currentType === 'Group') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-teal-400">👥 Ελάχιστα Άτομα</p><input type="number" id="c-group-people" value="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
         }
 
         window.changeCategory = (v) => { currentCategory = v; updateFormUI(); };
         window.changeType = (v) => { currentType = v; updateFormUI(); };
 
-        // 📊 ΦΟΡΤΩΣΗ ΚΑΙ ΕΜΦΑΝΙΣΗ ΚΟΥΠΟΝΙΩΝ
         async function fetchCampaigns() {
             try {
                 const { data: list, error } = await supaClient.from('coupons').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
-
                 const body = document.getElementById('coupons-table-body');
-                if(!list || list.length === 0) {
-                    body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Καμία ενεργή καμπάνια.</td></tr>`;
-                    return;
-                }
+                if(!list || list.length === 0) { body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Καμία καμπάνια.</td></tr>`; return; }
 
                 body.innerHTML = list.map(c => {
-                    // Δημιουργία έξυπνου badge για τον μηχανισμό
                     let typeBadge = '';
-                    if (c.coupon_type === 'Flash') typeBadge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">⚡ FLASH SALE</span>`;
-                    else if (c.coupon_type === 'Tiered') typeBadge = `<span class="bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">📈 TIERED GAMIFIED</span>`;
-                    else if (c.coupon_type === 'Group') typeBadge = `<span class="bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">👥 GROUP (${c.group_min_people} άτομα)</span>`;
-                    else typeBadge = `<span class="bg-gray-500/20 text-gray-400 border border-gray-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">🎯 STANDARD</span>`;
+                    if (c.coupon_type === 'Flash') typeBadge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">⚡ FLASH</span>`;
+                    else if (c.coupon_type === 'Tiered') typeBadge = `<span class="bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">📈 TIERED</span>`;
+                    else if (c.coupon_type === 'Group') typeBadge = `<span class="bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">👥 GROUP</span>`;
+                    else typeBadge = `<span class="bg-gray-500/20 text-gray-400 border border-gray-500/30 text-[10px] px-2 py-0.5 rounded-md font-bold">🎯 STD</span>`;
 
-                    let descText = c.description || '';
-                    if (c.coupon_type === 'Flash' && c.flash_duration_minutes) descText += ` | Διάρκεια: ${c.flash_duration_minutes} λεπτά`;
-
-                    const statusClass = c.is_active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-gray-500/10 text-gray-400 border-gray-500/20';
-
+                    const statClass = c.is_active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-gray-500/10 text-gray-400 border-gray-500/20';
                     return `
                         <tr class="hover:bg-[#0F172A]/30 transition">
-                            <td class="p-4">
-                                <div class="font-bold text-[#22D3EE]">${c.title}</div>
-                                <div class="text-xs text-gray-400 mt-0.5">${descText}</div>
-                            </td>
-                            <td class="p-4 space-y-1">${typeBadge}</td>
-                            <td class="p-4 text-center">
-                                <button onclick="toggleCamp('${c.id}', ${c.is_active})" class="border text-[11px] px-2.5 py-1 rounded-full font-bold ${statusClass}">
-                                    ${c.is_active ? 'Ενεργή' : 'Κλειστή'}
-                                </button>
-                            </td>
-                            <td class="p-4 text-right">
-                                <button onclick="deleteCamp('${c.id}')" class="text-red-400 hover:text-red-300 font-bold bg-red-500/10 px-3 py-1.5 rounded-lg text-xs">Διαγραφή</button>
-                            </td>
+                            <td class="p-4"><div class="font-bold text-[#22D3EE]">${c.title}</div><div class="text-xs text-gray-400 mt-0.5">${c.description || ''}</div></td>
+                            <td class="p-4">${typeBadge}</td>
+                            <td class="p-4 text-center"><button onclick="toggleCamp('${c.id}', ${c.is_active})" class="border text-[11px] px-2.5 py-1 rounded-full font-bold ${statClass}">${c.is_active ? 'Ενεργή' : 'Κλειστή'}</button></td>
+                            <td class="p-4 text-right"><button onclick="deleteCamp('${c.id}')" class="text-red-400 hover:text-red-300 font-bold bg-red-500/10 px-3 py-1.5 rounded-lg text-xs">Διαγραφή</button></td>
                         </tr>
                     `;
                 }).join('');
             } catch(e) { console.error(e); }
         }
 
-        // 🗑️ ACTIONS
         window.deleteCamp = async (id) => { if(confirm('Διαγραφή;')) { await supaClient.from('coupons').delete().eq('id', id); fetchCampaigns(); } };
         window.toggleCamp = async (id, stat) => { await supaClient.from('coupons').update({ is_active: !stat }).eq('id', id); fetchCampaigns(); };
 
-        // 📝 SUBMIT ΦΟΡΜΑΣ
         document.getElementById('campaign-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('f-status');
-            status.className = "mt-2 text-center text-xs font-medium text-yellow-400";
-            status.innerText = "Ενεργοποίηση καμπάνιας...";
-            status.classList.remove('hidden');
-
-            const title = document.getElementById('c-title').value;
-            const discount = document.getElementById('c-discount').value;
-            const expiry = document.getElementById('c-expiry').value;
-            const max = document.getElementById('c-max').value || null;
-            const limit = document.getElementById('c-limit').value || 1;
-
-            const flashMins = document.getElementById('c-flash-mins') ? document.getElementById('c-flash-mins').value : null;
-            const groupPeople = document.getElementById('c-group-people') ? document.getElementById('c-group-people').value : null;
+            status.className = "mt-2 text-center text-xs font-medium text-yellow-400 block";
+            status.innerText = "Αποθήκευση...";
 
             try {
                 const { error } = await supaClient.from('coupons').insert([{
-                    title: title,
-                    description: `[${currentCategory}] Προσφορά: ${discount} | Λήξη: ${expiry}`,
+                    title: document.getElementById('c-title').value,
+                    description: `[${currentCategory}] Προσφορά: ${document.getElementById('c-discount').value}`,
                     coupon_type: currentType,
                     is_active: true,
-                    merchant_id: "00000000-0000-0000-0000-000000000001",
-                    max_uses: max,
-                    limit_per_student: limit,
-                    flash_duration_minutes: flashMins,
-                    group_min_people: groupPeople,
+                    merchant_id: MERCHANT_ID,
+                    max_uses: document.getElementById('c-max').value || null,
+                    limit_per_student: document.getElementById('c-limit').value || 1,
+                    flash_duration_minutes: document.getElementById('c-flash-mins') ? document.getElementById('c-flash-mins').value : null,
+                    group_min_people: document.getElementById('c-group-people') ? document.getElementById('c-group-people').value : null,
                     created_at: new Date().toISOString()
                 }]);
-
                 if (error) throw error;
-
-                status.className = "mt-2 text-center text-xs font-medium text-emerald-400";
-                status.innerText = "🎉 Η καμπάνια ενεργοποιήθηκε επιτυχώς στη βάση!";
+                status.className = "mt-2 text-center text-xs font-medium text-emerald-400 block";
+                status.innerText = "Επιτυχία!";
                 document.getElementById('campaign-form').reset();
                 updateFormUI();
                 fetchCampaigns();
-                setTimeout(() => status.classList.add('hidden'), 4000);
-            } catch(err) {
-                status.className = "mt-2 text-center text-xs font-medium text-red-400";
-                status.innerText = "❌ Αποτυχία: " + err.message;
-            }
+                setTimeout(() => status.classList.add('hidden'), 3000);
+            } catch(err) { status.className = "mt-2 text-center text-xs font-medium text-red-400 block"; status.innerText = "Σφάλμα!"; }
         });
 
         window.addEventListener('DOMContentLoaded', () => { updateFormUI(); fetchCampaigns(); });
