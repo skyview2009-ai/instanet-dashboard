@@ -7,11 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔌 ΣΥΝΔΕΣΗ ΜΕ ΤΟ SUPABASE (ΔΙΟΡΘΩΜΕΝΟ)
+        // 🔌 ΣΥΝΔΕΣΗ ΜΕ ΤΟ SUPABASE 
         const SUPABASE_URL = 'https://huhsowdgkebtuezclusy.supabase.co'; 
         const SUPABASE_KEY = 'sb_publishable_XuNBGqSlabvsBVMHKw2Icg_lEHxOT5v';
-        
-        // Ονομάζουμε τη σύνδεση "supaClient" για να μην "χτυπάει" με τη βιβλιοθήκη!
         const supaClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     </script>
 </head>
@@ -62,9 +60,28 @@
                             </tr>
                         </thead>
                         <tbody id="redemptions-table" class="text-sm divide-y divide-gray-800 text-gray-300">
-                            <tr>
-                                <td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση δεδομένων...</td>
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση δεδομένων...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden mt-6">
+                <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-[#182232]">
+                    <h3 class="font-bold text-gray-200">📋 Τα Κουπόνια μου (Διαχείριση)</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
+                                <th class="p-4">Τίτλος</th>
+                                <th class="p-4">Λήξη</th>
+                                <th class="p-4 text-center">Κατάσταση</th>
+                                <th class="p-4 text-right">Ενέργειες</th>
                             </tr>
+                        </thead>
+                        <tbody id="manage-coupons-table" class="text-sm divide-y divide-gray-800 text-gray-300">
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση δεδομένων...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -104,10 +121,9 @@
     </div>
 
     <script>
-        // 📊 1. ΦΟΡΤΩΣΗ ΣΤΑΤΙΣΤΙΚΩΝ ΚΑΙ ΠΙΝΑΚΑ ΑΠΟ ΤΟ SUPABASE
+        // 📊 1. ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ
         async function loadDashboardData() {
             try {
-                // ΕΔΩ ΕΓΙΝΕ Η ΑΛΛΑΓΗ: redeemed_at αντί για created_at
                 const { data: redemptions, error: rError } = await supaClient
                     .from('redemptions')
                     .select('*')
@@ -117,38 +133,92 @@
 
                 const { data: coupons, error: cError } = await supaClient
                     .from('coupons')
-                    .select('*');
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
                 if (cError) throw cError;
 
-                // Ενημέρωση KPIs
+                // Ενημέρωση KPIs (Μετράμε μόνο τα ενεργά για το 2ο κουτάκι)
+                const activeCoupons = coupons ? coupons.filter(c => c.is_active).length : 0;
                 document.getElementById('stat-total').innerText = redemptions ? redemptions.length : 0;
-                document.getElementById('stat-active').innerText = coupons ? coupons.length : 0;
+                document.getElementById('stat-active').innerText = activeCoupons;
                 document.getElementById('stat-today').innerText = redemptions ? Math.floor(redemptions.length * 0.4) + 1 : 0;
 
+                // Χτίσιμο Πίνακα Εξαργυρώσεων
                 const tableBody = document.getElementById('redemptions-table');
                 if (!redemptions || redemptions.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν έχουν γίνει ακόμα εξαργυρώσεις.</td></tr>`;
-                    return;
+                } else {
+                    tableBody.innerHTML = redemptions.map(r => {
+                        const date = new Date(r.redeemed_at).toLocaleString('el-GR', { hour12: false });
+                        return `
+                            <tr class="hover:bg-[#0F172A]/30 transition">
+                                <td class="p-4 font-mono text-xs text-[#22D3EE]">${r.student_id ? r.student_id.substring(0, 8) : '---'}...</td>
+                                <td class="p-4 font-medium">Κουπόνι #${r.coupon_id}</td>
+                                <td class="p-4 text-xs text-gray-400">${date}</td>
+                                <td class="p-4 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] px-2.5 py-1 rounded-full font-bold">Επιτυχής</span></td>
+                            </tr>
+                        `;
+                    }).join('');
                 }
 
-                tableBody.innerHTML = redemptions.map(r => {
-                    // ΕΔΩ ΕΓΙΝΕ Η ΑΛΛΑΓΗ: r.redeemed_at
-                    const date = new Date(r.redeemed_at).toLocaleString('el-GR', { hour12: false });
-                    return `
-                        <tr class="hover:bg-[#0F172A]/30 transition">
-                            <td class="p-4 font-mono text-xs text-[#22D3EE]">${r.student_id ? r.student_id.substring(0, 8) : '---'}...</td>
-                            <td class="p-4 font-medium">Κουπόνι #${r.coupon_id}</td>
-                            <td class="p-4 text-xs text-gray-400">${date}</td>
-                            <td class="p-4 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] px-2.5 py-1 rounded-full font-bold">Επιτυχής</span></td>
-                        </tr>
-                    `;
-                }).join('');
+                // 🆕 Χτίσιμο Πίνακα Διαχείρισης Κουπονιών
+                const couponsTableBody = document.getElementById('manage-coupons-table');
+                if (!coupons || coupons.length === 0) {
+                    couponsTableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν έχεις δημιουργήσει κανένα κουπόνι.</td></tr>`;
+                } else {
+                    couponsTableBody.innerHTML = coupons.map(c => {
+                        let expiry = '---';
+                        if(c.description && c.description.includes('Λήξη: ')) {
+                            expiry = c.description.split('Λήξη: ')[1];
+                        }
+                        
+                        const statusClass = c.is_active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+                        const statusText = c.is_active ? 'Ενεργό' : 'Ανενεργό';
+                        
+                        return `
+                            <tr class="hover:bg-[#0F172A]/30 transition">
+                                <td class="p-4 font-medium text-[#22D3EE]">${c.title}</td>
+                                <td class="p-4 text-xs text-gray-400">${expiry}</td>
+                                <td class="p-4 text-center">
+                                    <button onclick="toggleCoupon('${c.id}', ${c.is_active})" class="border text-[11px] px-2.5 py-1 rounded-full font-bold transition hover:opacity-80 ${statusClass}">
+                                        ${statusText}
+                                    </button>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button onclick="deleteCoupon('${c.id}')" class="text-red-400 hover:text-red-300 transition text-xs font-bold bg-red-500/10 px-3 py-1.5 rounded-lg">Διαγραφή</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
 
             } catch (err) {
                 console.error("Σφάλμα Dashboard:", err);
             }
         }
+
+        // 🗑️ ΛΕΙΤΟΥΡΓΙΑ ΔΙΑΓΡΑΦΗΣ
+        window.deleteCoupon = async function(id) {
+            if(!confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το κουπόνι;')) return;
+            
+            const { error } = await supaClient.from('coupons').delete().eq('id', id);
+            if(error) {
+                alert('Σφάλμα διαγραφής: ' + error.message);
+            } else {
+                loadDashboardData(); 
+            }
+        };
+
+        // 🔄 ΛΕΙΤΟΥΡΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗΣ / ΑΠΕΝΕΡΓΟΠΟΙΗΣΗΣ
+        window.toggleCoupon = async function(id, currentStatus) {
+            const { error } = await supaClient.from('coupons').update({ is_active: !currentStatus }).eq('id', id);
+            if(error) {
+                alert('Σφάλμα ενημέρωσης: ' + error.message);
+            } else {
+                loadDashboardData(); 
+            }
+        };
 
         // 📝 2. ΔΗΜΙΟΥΡΓΙΑ ΝΕΟΥ ΚΟΥΠΟΝΙΟΥ ΣΤΟ SUPABASE
         document.getElementById('coupon-form').addEventListener('submit', async (e) => {
@@ -180,7 +250,7 @@
                 statusDiv.innerText = "🎉 Το κουπόνι δημοσιεύτηκε επιτυχώς!";
                 document.getElementById('coupon-form').reset();
                 
-                loadDashboardData();
+                loadDashboardData(); 
 
                 setTimeout(() => statusDiv.classList.add('hidden'), 4000);
 
