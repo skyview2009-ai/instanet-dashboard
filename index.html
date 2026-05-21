@@ -34,7 +34,6 @@
         </div>
 
         <div id="tab-content-coupons" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
                     <div class="p-5 border-b border-gray-800 bg-[#182232]">
@@ -63,7 +62,6 @@
                     <span>🚀 Δημιουργία Καμπάνιας</span>
                     <span id="category-badge" class="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded font-bold">Φόρτωση...</span>
                 </h3>
-
                 <div>
                     <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">1. Μηχανισμός Πωλήσεων</label>
                     <select id="type-select" onchange="changeType(this.value)" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
@@ -73,7 +71,6 @@
                         <option value="Group">👥 "Φέρε την Παρέα σου"</option>
                     </select>
                 </div>
-
                 <form id="campaign-form" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">2. Όνομα Καμπάνιας</label>
@@ -105,7 +102,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">Ψηφιακή Βιτρίνα (Πλήρες Προφίλ)</h2>
-                        <p class="text-gray-400 text-sm mt-1">Αυτά τα στοιχεία θα εμφανίζονται αυτόματα στην εφαρμογή των φοιτητών.</p>
+                        <p class="text-gray-400 text-sm mt-1">Ανέβασε τις εικόνες σου και συμπλήρωσε τα στοιχεία που θα βλέπουν οι φοιτητές.</p>
                     </div>
                 </div>
 
@@ -121,19 +118,27 @@
                             <select id="p-category" required class="w-full bg-[#0F172A] border border-amber-500/40 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 text-white font-bold">
                                 <option value="Εστίαση">☕ Εστίαση (Καφέ/Φαγητό)</option>
                                 <option value="Λιανική">🛍️ Λιανική (Μόδα/Αξεσουάρ/Προϊόντα)</option>
-                                <option value="Υπηρεσίες">🏋️‍♂️ Υπηρεσίες (Γυμναστήρια/Κομμωτήρια/Εξορμήσεις)</option>
+                                <option value="Υπηρεσίες">🏋️‍♂️ Υπηρεσίες (Γυμναστήρια/Κομμωτήρια)</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#0F172A]/20 p-4 rounded-xl border border-gray-800">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμος Λογότυπου (Logo URL)</label>
-                            <input type="text" id="p-logo" placeholder="https://example.com/logo.png" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                            <label class="block text-xs font-semibold text-[#22D3EE] uppercase mb-2">📸 Ανέβασμα Λογότυπου (Logo)</label>
+                            <input type="file" id="logo-file-input" accept="image/*" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#22D3EE] file:text-slate-900 hover:file:bg-[#06B6D4] cursor-pointer" />
+                            <input type="hidden" id="p-logo">
+                            <div id="logo-preview-container" class="mt-3 hidden">
+                                <img id="logo-preview" src="" class="h-16 w-16 object-cover rounded-full border border-gray-700">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Σύνδεσμος Εξωφύλλου (Cover Banner URL)</label>
-                            <input type="text" id="p-banner" placeholder="https://example.com/banner.jpg" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                            <label class="block text-xs font-semibold text-[#22D3EE] uppercase mb-2">🖼️ Ανέβασμα Εξωφύλλου (Cover Banner)</label>
+                            <input type="file" id="banner-file-input" accept="image/*" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#22D3EE] file:text-slate-900 hover:file:bg-[#06B6D4] cursor-pointer" />
+                            <input type="hidden" id="p-banner">
+                            <div id="banner-preview-container" class="mt-3 hidden">
+                                <img id="banner-preview" src="" class="h-16 w-full object-cover rounded-xl border border-gray-700">
+                            </div>
                         </div>
                     </div>
 
@@ -155,13 +160,13 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Ιστοσελίδα / E-shop URL</label>
-                            <input type="text" id="p-website" placeholder="π.w. https://www.coffeeisland.gr" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
+                            <input type="text" id="p-website" placeholder="π.χ. https://www.coffeeisland.gr" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Περιγραφή Επιχείρησης (Bio / Μήνυμα προς Φοιτητές)</label>
-                        <textarea id="p-bio" rows="3" placeholder="Γράψτε ένα ελκυστικό κείμενο για τους φοιτητές που θα βλέπουν την προσφορά σας..." class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white"></textarea>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Περιγραφή Επιχείρησης (Bio)</label>
+                        <textarea id="p-bio" rows="3" placeholder="Γράψτε ένα κείμενο για τους φοιτητές..." class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white"></textarea>
                     </div>
 
                     <div class="border-t border-gray-800 pt-4">
@@ -185,7 +190,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -194,14 +198,12 @@
             document.getElementById('tab-content-coupons').classList.add('hidden');
             document.getElementById('tab-content-profile').classList.add('hidden');
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
-
             const btnC = document.getElementById('tab-btn-coupons');
             const btnP = document.getElementById('tab-btn-profile');
-            
             if(tabName === 'coupons') {
                 btnC.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 btnP.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
-                loadMerchantCategoryOnly(); // Ανανέωση του κλάδου στη φόρμα κουπονιών
+                loadMerchantCategoryOnly();
             } else {
                 btnP.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 btnC.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
@@ -209,7 +211,7 @@
             }
         }
 
-        // --- 2. ΛΕΙΤΟΥΡΓΙΕΣ ΦΟΡΤΩΣΗΣ & ΑΠΟΘΗΚΕΥΣΗΣ ΠΡΟΦΙΛ ---
+        // --- 2. ΛΕΙΤΟΥΡΓΙΕΣ ΦΟΡΤΩΣΗΣ ΠΡΟΦΙΛ & PREVIEWS ---
         async function loadMerchantProfile() {
             try {
                 const { data, error } = await supaClient.from('merchants').select('*').eq('id', MERCHANT_ID).single();
@@ -224,37 +226,72 @@
                     document.getElementById('p-bio').value = data.bio || '';
                     document.getElementById('p-website').value = data.website || '';
                     
+                    if(data.logo_url) {
+                        document.getElementById('logo-preview').src = data.logo_url;
+                        document.getElementById('logo-preview-container').classList.remove('hidden');
+                    }
+                    if(data.banner_url) {
+                        document.getElementById('banner-preview').src = data.banner_url;
+                        document.getElementById('banner-preview-container').classList.remove('hidden');
+                    }
+
                     if(data.opening_hours) document.getElementById('p-hours').value = data.opening_hours.text || '';
                     if(data.social_links) {
                         document.getElementById('p-ig').value = data.social_links.instagram || '';
                         document.getElementById('p-tiktok').value = data.social_links.tiktok || '';
                     }
-                    
-                    // Συγχρονίζουμε την τρέχουσα κατηγορία για τη φόρμα των κουπονιών
-                    currentCategory = data.category || 'Εστίαση';
+                    currentCategory = data.category || 'Εστία6η';
                 }
             } catch (err) { console.error("Error loading profile:", err); }
         }
 
-        // Μικρή συνάρτηση για να ξέρει η καρτέλα των κουπονιών τον σωστό κλάδο από τη βάση
         async function loadMerchantCategoryOnly() {
             try {
                 const { data } = await supaClient.from('merchants').select('category').eq('id', MERCHANT_ID).single();
-                if(data && data.category) {
-                    currentCategory = data.category;
-                    updateFormUI();
-                }
+                if(data && data.category) { currentCategory = data.category; updateFormUI(); }
             } catch(e){}
+        }
+
+        // --- 📸 ΜΗΧΑΝΙΣΜΟΣ LIVE UPLOAD ΣΤΟ STORAGE ---
+        async function uploadImageFile(fileInputId, hiddenInputId, previewImgId, previewContainerId, fileTypeLabel) {
+            const fileInput = document.getElementById(fileInputId);
+            if (!fileInput.files || fileInput.files.length === 0) return;
+            
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${MERCHANT_ID}-${fileTypeLabel}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            
+            // Ανέβασμα στο Supabase Bucket 'merchant-assets'
+            const { error: uploadError } = await supaClient.storage
+                .from('merchant-assets')
+                .upload(fileName, file, { upsert: true });
+
+            if (uploadError) {
+                alert("Σφάλμα Upload: " + uploadError.message);
+                return;
+            }
+
+            // Παίρνουμε το δημόσιο URL της εικόνας
+            const { data } = supaClient.storage.from('merchant-assets').getPublicUrl(fileName);
+            if (data && data.publicUrl) {
+                document.getElementById(hiddenInputId).value = data.publicUrl;
+                document.getElementById(previewImgId).src = data.publicUrl;
+                document.getElementById(previewContainerId).classList.remove('hidden');
+            }
         }
 
         document.getElementById('profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('p-status');
             status.className = "mt-3 text-center text-xs font-medium text-yellow-400 block";
-            status.innerText = "Αποθήκευση και συγχρονισμός δεδομένων...";
+            status.innerText = "Ανέβασμα εικόνων και αποθήκευση προφίλ...";
 
+            // 1. Εκτελούμε πρώτα τα Uploads αν ο χρήστης επέλεξε νέα αρχεία
+            await uploadImageFile('logo-file-input', 'p-logo', 'logo-preview', 'logo-preview-container', 'logo');
+            await uploadImageFile('banner-file-input', 'p-banner', 'banner-preview', 'banner-preview-container', 'banner');
+
+            // 2. Μαζεύουμε όλα τα δεδομένα για τον πίνακα merchants
             const selectedCategory = document.getElementById('p-category').value;
-
             const updateData = {
                 name: document.getElementById('p-name').value,
                 category: selectedCategory,
@@ -274,14 +311,13 @@
             try {
                 const { error } = await supaClient.from('merchants').update(updateData).eq('id', MERCHANT_ID);
                 if (error) throw error;
-                
-                currentCategory = selectedCategory; // Ενημερώνουμε την τοπική μεταβλητή
+                currentCategory = selectedCategory;
                 status.className = "mt-3 text-center text-xs font-medium text-emerald-400 block";
-                status.innerText = "🎉 Το προφίλ και η κατηγορία αποθηκεύτηκαν επιτυχώς στη βάση!";
+                status.innerText = "🎉 Οι εικόνες ανέβηκαν και το προφίλ αποθηκεύτηκε επιτυχώς!";
                 setTimeout(() => status.classList.add('hidden'), 4000);
             } catch (err) {
                 status.className = "mt-3 text-center text-xs font-medium text-red-400 block";
-                status.innerText = "❌ Σφάλμα κατά την αποθήκευση: " + err.message;
+                status.innerText = "❌ Σφάλμα: " + err.message;
             }
         });
 
@@ -294,12 +330,12 @@
             if (currentType === 'Tiered') {
                 offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Κλιμάκια (Tiers)</label><textarea id="c-discount" required rows="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#22D3EE] text-white" placeholder="π.χ.\nΞόδεψε 5€ -> 10%\nΞόδεψε 10€ -> 20%"></textarea>`;
             } else {
-                let p = currentCategory === 'Υπηρεσίες' ? "π.χ. 19€/Μήνα ή -40% στη συνδρομή" : "π.χ. -20% ή 1+1 Δώρο";
-                offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Η Προσφορά σας</label><input type="text" id="c-discount" required placeholder="${p}" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">`;
+                let p = currentCategory === 'Υπηρεσίες' ? "π.χ. 19€/Μήνα" : "π.χ. -20% ή 1+1 Δώρο";
+                offerBlock.innerHTML = `<label class="block text-xs font-semibold text-gray-400 uppercase mb-1">3. Η Προσφορά JavaScript</label><input type="text" id="c-discount" required placeholder="${p}" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#22D3EE] text-white">`;
             }
 
             if (currentType === 'Standard') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-gray-400">📅 Λήξη</p><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
-            else if (currentType === 'Flash') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-amber-400">⚡ Flash Sale (FOMO)</p><input type="number" id="c-flash-mins" value="45" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="hidden" id="c-expiry" value="${new Date(Date.now()+86400000).toISOString().split('T')[0]}">`;
+            else if (currentType === 'Flash') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-amber-400">⚡ Flash Sale</p><input type="number" id="c-flash-mins" value="45" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="hidden" id="c-expiry" value="${new Date(Date.now()+86400000).toISOString().split('T')[0]}">`;
             else if (currentType === 'Tiered') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-purple-400">📈 Tiers</p><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
             else if (currentType === 'Group') mechBlock.innerHTML = `<p class="text-[11px] font-bold text-teal-400">👥 Ελάχιστα Άτομα</p><input type="number" id="c-group-people" value="3" class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-1.5 text-xs text-white"><input type="date" id="c-expiry" required class="w-full bg-[#0F172A] border border-gray-700 rounded-lg p-2 text-xs text-white">`;
         }
@@ -365,11 +401,7 @@
             } catch(err) { status.className = "mt-2 text-center text-xs font-medium text-red-400 block"; status.innerText = "Σφάλμα!"; }
         });
 
-        // Αρχική φόρτωση
-        window.addEventListener('DOMContentLoaded', () => { 
-            loadMerchantCategoryOnly(); 
-            fetchCampaigns(); 
-        });
+        window.addEventListener('DOMContentLoaded', () => { loadMerchantCategoryOnly(); fetchCampaigns(); });
     </script>
 </body>
 </html>
