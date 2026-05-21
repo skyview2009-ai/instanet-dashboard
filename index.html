@@ -10,7 +10,9 @@
         // 🔌 ΣΥΝΔΕΣΗ ΜΕ ΤΟ SUPABASE (ΔΙΟΡΘΩΜΕΝΟ)
         const SUPABASE_URL = 'https://huhsowdgkebtuezclusy.supabase.co'; 
         const SUPABASE_KEY = 'sb_publishable_XuNBGqSlabvsBVMHKw2Icg_1EHxOT5v';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Ονομάζουμε τη σύνδεση "supaClient" για να μην "χτυπάει" με τη βιβλιοθήκη!
+        const supaClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     </script>
 </head>
 <body class="bg-[#0F172A] text-white font-sans min-h-screen">
@@ -105,14 +107,15 @@
         // 📊 1. ΦΟΡΤΩΣΗ ΣΤΑΤΙΣΤΙΚΩΝ ΚΑΙ ΠΙΝΑΚΑ ΑΠΟ ΤΟ SUPABASE
         async function loadDashboardData() {
             try {
-                const { data: redemptions, error: rError } = await supabase
+                // Προσοχή: Χρησιμοποιούμε το supaClient πλέον!
+                const { data: redemptions, error: rError } = await supaClient
                     .from('redemptions')
                     .select('*')
                     .order('created_at', { ascending: false });
 
                 if (rError) throw rError;
 
-                const { data: coupons, error: cError } = await supabase
+                const { data: coupons, error: cError } = await supaClient
                     .from('coupons')
                     .select('*');
 
@@ -160,7 +163,7 @@
             statusDiv.classList.remove('hidden');
 
             try {
-                const { error } = await supabase
+                const { error } = await supaClient
                     .from('coupons')
                     .insert([{ 
                         title: title, 
