@@ -13,10 +13,54 @@
         
         let currentCategory = 'Εστίαση';
         let currentType = 'Standard';
-        const MERCHANT_ID = "00000000-0000-0000-0000-000000000001"; // Το ID του Coffee Island
+        let MERCHANT_ID = null; // Συμπληρώνεται δυναμικά από το login
         
         // Δεδομένα για το Live Preview του κινητού
-        let merchantProfileData = { name: 'Το Κατάστημά μου', logo: 'https://via.placeholder.com/150' };
+        let merchantProfileData = { name: 'Φόρτωση...', logo: 'https://via.placeholder.com/150' };
+
+        // 🛡️ ΕΛΕΓΧΟΣ ΑΣΦΑΛΕΙΑΣ & ΑΥΤΟΜΑΤΗ ΦΟΡΤΩΣΗ ΚΑΤΑΣΤΗΜΑΤΟΣ
+        async function checkAuthAndLoadMerchant() {
+            const { data: { session } } = await supaClient.auth.getSession();
+            
+            // Αν δεν είναι συνδεδεμένος, ανακατεύθυνση στο login
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Εύρεση καταστήματος με βάση το owner_id του συνδεδεμένου χρήστη
+            const userUuid = session.user.id;
+            const { data: merchant, error } = await supaClient
+                .from('merchants')
+                .select('*')
+                .eq('owner_id', userUuid)
+                .maybeSingle();
+
+            if (merchant) {
+                MERCHANT_ID = merchant.id;
+                merchantProfileData.name = merchant.name || 'Νέο Κατάστημα';
+                if (merchant.logo_url) merchantProfileData.logo = merchant.logo_url;
+                if (merchant.category) currentCategory = merchant.category;
+                
+                // Εκκίνηση των δεδομένων της σελίδας αφού βρέθηκε το σωστό MERCHANT_ID
+                loadMerchantCategoryOnly();
+                fetchCampaigns();
+            } else {
+                alert("Δεν βρέθηκε κατάστημα συνδεδεμένο με αυτόν τον λογαριασμό.");
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Εκτέλεση ελέγχου αμέσως
+        checkAuthAndLoadMerchant();
+
+        // 🚪 ΛΕΙΤΟΥΡΓΙΑ ΑΠΟΣΥΝΔΕΣΗΣ
+        async function handleLogout() {
+            if(confirm('Θέλετε να αποσυνδεθείτε από το Portal;')) {
+                await supaClient.auth.signOut();
+                window.location.href = 'login.html';
+            }
+        }
     </script>
 </head>
 <body class="bg-[#0F172A] text-white font-sans min-h-screen">
@@ -26,7 +70,13 @@
             <h1 class="text-xl font-black text-[#22D3EE]">instaNet Portal <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded ml-2">ULTIMATE ENGINE</span></h1>
             <p class="text-xs text-gray-400 mt-0.5">Καλωσήρθατε στο κέντρο ελέγχου της επιχείρησής σας</p>
         </div>
-        <button onclick="alert('Αποσύνδεση...')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl border border-red-500/20">Έξοδος</button>
+        
+        <div class="flex items-center gap-3">
+            <a href="https://skyview2009-ai.github.io/instanet-business/" target="_blank" class="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 text-xs font-bold px-4 py-2 rounded-xl border border-purple-500/30 transition flex items-center gap-2">
+                <span>📸</span> Λειτουργία Ταμείου
+            </a>
+            <button onclick="handleLogout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2 rounded-xl border border-red-500/20 transition">Έξοδος</button>
+        </div>
     </nav>
 
     <div class="max-w-[1400px] mx-auto p-6">
@@ -325,7 +375,7 @@
                 loadMerchantCategoryOnly();
             } else if(tabName === 'analytics') {
                 btnA.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
-                fetchAnalyticsData(); // Φόρτωση των στατιστικών!
+                fetchAnalyticsData(); 
             } else {
                 btnP.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 loadMerchantProfile(); 
@@ -334,14 +384,13 @@
 
         // --- 📊 ΛΕΙΤΟΥΡΓΙΕΣ ΑΝΑΛΥΣΗΣ & ΣΤΑΤΙΣΤΙΚΩΝ ---
         async function fetchAnalyticsData() {
+            if (!MERCHANT_ID) return;
             try {
-                // Τραβάμε τα δεδομένα από τον πίνακα analytics (που μόλις έφτιαξες στο Supabase)
                 const { data: logs, error } = await supaClient.from('coupon_analytics').select('*').eq('merchant_id', MERCHANT_ID).order('created_at', { ascending: false });
                 if (error) throw error;
 
                 let push = 0, views = 0, clicks = 0, redeemed = 0;
                 
-                // Υπολογισμός των metrics
                 if(logs) {
                     logs.forEach(row => {
                         if(row.event_type === 'received_notification') push++;
@@ -351,13 +400,11 @@
                     });
                 }
 
-                // Ενημέρωση Καρτών
                 document.getElementById('stat-push').innerText = push;
                 document.getElementById('stat-views').innerText = views;
                 document.getElementById('stat-clicks').innerText = clicks;
                 document.getElementById('stat-redeemed').innerText = redeemed;
 
-                // Υπολογισμός Ποσοστών Χοάνης (Funnel)
                 let pctViews = push > 0 ? Math.round((views / push) * 100) : 0;
                 let pctClicks = push > 0 ? Math.round((clicks / push) * 100) : 0;
                 let pctRedeemed = push > 0 ? Math.round((redeemed / push) * 100) : 0;
@@ -369,7 +416,6 @@
                 document.getElementById('lbl-f4').innerText = pctRedeemed + "% (Total Sales)";
                 document.getElementById('bar-f4').style.width = pctRedeemed + "%";
 
-                // Γέμισμα Πίνακα Live Event Log
                 const tableBody = document.getElementById('analytics-table-body');
                 if(!logs || logs.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-600">Καμία live καταγραφή ακόμα.</td></tr>`;
@@ -423,6 +469,7 @@
         }
 
         async function loadMerchantProfile() {
+            if (!MERCHANT_ID) return;
             try {
                 const { data, error } = await supaClient.from('merchants').select('*').eq('id', MERCHANT_ID).single();
                 if (error) throw error;
@@ -456,6 +503,7 @@
         }
 
         async function loadMerchantCategoryOnly() {
+            if (!MERCHANT_ID) return;
             try {
                 const { data } = await supaClient.from('merchants').select('category, name, logo_url').eq('id', MERCHANT_ID).single();
                 if(data) { 
@@ -470,6 +518,7 @@
 
         // --- 📸 ΜΗΧΑΝΙΣΜΟΣ UPLOAD ΦΩΤΟΓΡΑΦΙΩΝ ---
         async function uploadImageFile(fileInputId, hiddenInputId, previewImgId, previewContainerId, fileTypeLabel) {
+            if (!MERCHANT_ID) return;
             const fileInput = document.getElementById(fileInputId);
             if (!fileInput.files || fileInput.files.length === 0) return;
             
@@ -491,6 +540,7 @@
 
         document.getElementById('profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!MERCHANT_ID) return;
             const status = document.getElementById('p-status');
             status.className = "mt-3 text-center text-xs font-medium text-yellow-400 block";
             status.innerText = "Αποθήκευση...";
@@ -552,8 +602,9 @@
         window.changeType = (v) => { currentType = v; updateFormUI(); };
 
         async function fetchCampaigns() {
+            if (!MERCHANT_ID) return;
             try {
-                const { data: list, error } = await supaClient.from('coupons').select('*').order('created_at', { ascending: false });
+                const { data: list, error } = await supaClient.from('coupons').select('*').eq('merchant_id', MERCHANT_ID).order('created_at', { ascending: false });
                 if (error) throw error;
                 const body = document.getElementById('coupons-table-body');
                 if(!list || list.length === 0) { body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Καμία καμπάνια.</td></tr>`; return; }
@@ -583,6 +634,7 @@
 
         document.getElementById('campaign-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!MERCHANT_ID) return;
             const status = document.getElementById('f-status');
             status.className = "mt-2 text-center text-xs font-medium text-yellow-400 block";
             status.innerText = "Αποθήκευση...";
@@ -609,8 +661,6 @@
                 setTimeout(() => status.classList.add('hidden'), 3000);
             } catch(err) { status.className = "mt-2 text-center text-xs font-medium text-red-400 block"; status.innerText = "Σφάλμα!"; }
         });
-
-        window.addEventListener('DOMContentLoaded', () => { loadMerchantCategoryOnly(); fetchCampaigns(); });
     </script>
 </body>
 </html>
