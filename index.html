@@ -84,11 +84,11 @@
         <div class="flex gap-4 mb-8 border-b border-gray-800 pb-4">
             <button onclick="switchTab('coupons')" id="tab-btn-coupons" class="bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm">🎫 Διαχείριση Κουπονιών</button>
             <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm">📊 Στατιστικά Καμπάνιας</button>
+            <button onclick="switchTab('employees')" id="tab-btn-employees" class="bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm">👥 Διαχείριση Προσωπικού</button>
             <button onclick="switchTab('profile')" id="tab-btn-profile" class="bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm">🏪 Προφίλ Καταστήματος</button>
         </div>
 
         <div id="tab-content-coupons" class="space-y-6">
-            
             <div class="bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
                 <div class="p-5 border-b border-gray-800 bg-[#182232]">
                     <h3 class="font-bold text-gray-200">📋 Ενεργές Καμπάνιες & Έξυπνα Κουπόνια</h3>
@@ -111,7 +111,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                
                 <div class="lg:col-span-2 bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg h-fit space-y-4">
                     <h3 class="text-lg font-bold text-gray-200 border-b border-gray-800 pb-3 flex justify-between items-center">
                         <span>🚀 Δημιουργία Καμπάνιας</span>
@@ -150,7 +149,6 @@
 
                 <div class="flex flex-col items-center sticky top-[100px]">
                     <span class="text-xs font-bold text-[#22D3EE] uppercase tracking-wider mb-3">📱 Live Προεπισκόπηση App</span>
-                    
                     <div class="w-[300px] h-[580px] bg-gray-50 rounded-[2.5rem] border-[12px] border-[#0F172A] shadow-2xl overflow-hidden relative flex flex-col font-sans">
                         <div class="bg-white w-full h-6 flex justify-between items-center px-4 pt-1">
                             <span class="text-[10px] text-gray-800 font-bold">14:00</span>
@@ -186,32 +184,44 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
         <div id="tab-content-analytics" class="hidden space-y-6">
-            
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-[#1E293B] p-5 rounded-2xl border border-gray-800 shadow flex flex-col">
                     <span class="text-xs text-gray-400 font-bold uppercase">🔔 Push Notifications</span>
                     <span id="stat-push" class="text-3xl font-black text-blue-400 mt-1">0</span>
-                    <span class="text-[10px] text-gray-500 mt-1">Απεστάλησαν σε κινητά</span>
                 </div>
                 <div class="bg-[#1E293B] p-5 rounded-2xl border border-gray-800 shadow flex flex-col">
                     <span class="text-xs text-gray-400 font-bold uppercase">👀 Προβολές (Views)</span>
                     <span id="stat-views" class="text-3xl font-black text-purple-400 mt-1">0</span>
-                    <span class="text-[10px] text-gray-500 mt-1">Φοιτητές που τις διάβασαν</span>
                 </div>
                 <div class="bg-[#1E293B] p-5 rounded-2xl border border-gray-800 shadow flex flex-col">
                     <span class="text-xs text-gray-400 font-bold uppercase">🖱️ Κλικς (Clicks)</span>
                     <span id="stat-clicks" class="text-3xl font-black text-amber-400 mt-1">0</span>
-                    <span class="text-[10px] text-gray-500 mt-1">Πάτησαν ενδιαφέρον</span>
                 </div>
                 <div class="bg-[#1E293B] p-5 rounded-2xl border border-gray-800 shadow flex flex-col">
                     <span class="text-xs text-gray-400 font-bold uppercase">💰 Εξαργυρώσεις (Redeemed)</span>
                     <span id="stat-redeemed" class="text-3xl font-black text-emerald-400 mt-1">0</span>
-                    <span class="text-[10px] text-gray-500 mt-1">Ήρθαν στο ταμείο live</span>
+                </div>
+            </div>
+
+            <div class="bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg">
+                <h3 class="font-bold text-gray-200 mb-4 flex items-center gap-2">📊 Απόδοση Προσωπικού / Ταμείων (Shift Analytics)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs divide-y divide-gray-800">
+                        <thead>
+                            <tr class="text-gray-400 uppercase">
+                                <th class="pb-3">Υπάλληλος / Σταθμός</th>
+                                <th class="pb-3">Username</th>
+                                <th class="pb-3 text-center">Συνολικές Εξαργυρώσεις</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee-stats-body" class="divide-y divide-gray-800 text-gray-300">
+                            <tr><td colspan="3" class="py-3 text-center text-gray-500">Δεν υπάρχουν δεδομένα βάρδιας ακόμα.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -220,19 +230,19 @@
                 <div class="space-y-4">
                     <div>
                         <div class="flex justify-between text-xs font-semibold mb-1"><span>1. Παραλαβή Notification</span><span id="lbl-f1">100%</span></div>
-                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden"><div id="bar-f1" class="bg-blue-500 h-full transition-all duration-500" style="width: 100%;"></div></div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden"><div id="bar-f1" class="bg-blue-500 h-full" style="width: 100%;"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-semibold mb-1"><span>2. Ανάγνωση Προσφοράς (Open Rate)</span><span id="lbl-f2">0%</span></div>
-                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden"><div id="bar-f2" class="bg-purple-500 h-full transition-all duration-500" style="width: 0%;"></div></div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden"><div id="bar-f2" class="bg-purple-500 h-full" style="width: 0%;"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-semibold mb-1"><span>3. Κλικ / Αποθήκευση (Click Rate)</span><span id="lbl-f3">0%</span></div>
-                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden"><div id="bar-f3" class="bg-amber-500 h-full transition-all duration-500" style="width: 0%;"></div></div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden"><div id="bar-f3" class="bg-amber-500 h-full" style="width: 0%;"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-semibold mb-1"><span>4. Τελική Αγορά στο Μαγαζί (Conversion Rate)</span><span id="lbl-f4" class="text-emerald-400 font-bold">0%</span></div>
-                        <div class="w-full bg-slate-800 h-4 rounded-full overflow-hidden"><div id="bar-f4" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%;"></div></div>
+                        <div class="w-full bg-slate-800 h-4 rounded-full overflow-hidden"><div id="bar-f4" class="bg-emerald-500 h-full" style="width: 0%;"></div></div>
                     </div>
                 </div>
             </div>
@@ -247,16 +257,63 @@
                             <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
                                 <th class="p-3">ID Φοιτητή (Student)</th>
                                 <th class="p-3">Ενέργεια (Event)</th>
+                                <th class="p-3">Χειριστής Ταμείου</th>
                                 <th class="p-3">Ώρα Καταγραφής</th>
                             </tr>
                         </thead>
                         <tbody id="analytics-table-body" class="text-xs divide-y divide-gray-800 font-mono text-gray-400">
-                            <tr><td colspan="3" class="p-4 text-center text-gray-600">Καμία live καταγραφή ακόμα.</td></tr>
+                            <tr><td colspan="4" class="p-4 text-center text-gray-600">Καμία live καταγραφή ακόμα.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
 
+        <div id="tab-content-employees" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div class="bg-[#1E293B] p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+                    <h3 class="text-md font-bold text-gray-200 border-b border-gray-800 pb-2">➕ Προσθήκη Νέου Υπαλλήλου / Ταμείου</h3>
+                    <form id="employee-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Όνομα / Διακριτικό (Label)</label>
+                            <input type="text" id="emp-label" required placeholder="π.χ. Ταμείο 1 (Πρωινό)" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#22D3EE]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Όνομα Χρήστη (Username)</label>
+                            <input type="text" id="emp-username" required placeholder="π.k. tameio1" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#22D3EE]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Κωδικός (Password)</label>
+                            <input type="password" id="emp-password" required placeholder="••••" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#22D3EE]">
+                        </div>
+                        <button type="submit" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition uppercase tracking-wider">
+                            Προσθήκη στη Βάρδια 👥
+                        </button>
+                    </form>
+                    <div id="emp-status" class="text-center text-xs font-medium hidden"></div>
+                </div>
+
+                <div class="lg:col-span-2 bg-[#1E293B] rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
+                    <div class="p-4 bg-[#182232] border-b border-gray-800">
+                        <h3 class="font-bold text-gray-200 text-sm">👥 Εγγεγραμμένοι Υπάλληλοι & Διαπιστευτήρια Ταμείου</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-xs text-gray-400 uppercase bg-[#0F172A]/50 border-b border-gray-800">
+                                    <th class="p-3">Σταθμός / Όνομα</th>
+                                    <th class="p-3">Username</th>
+                                    <th class="p-3">Κωδικός</th>
+                                    <th class="p-3 text-right">Ενέργειες</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employees-table-body" class="text-xs text-gray-300 divide-y divide-gray-800">
+                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Φόρτωση προσωπικού...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="tab-content-profile" class="hidden">
@@ -361,14 +418,16 @@
         function switchTab(tabName) {
             document.getElementById('tab-content-coupons').classList.add('hidden');
             document.getElementById('tab-content-analytics').classList.add('hidden');
+            document.getElementById('tab-content-employees').classList.add('hidden');
             document.getElementById('tab-content-profile').classList.add('hidden');
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
             
             const btnC = document.getElementById('tab-btn-coupons');
             const btnA = document.getElementById('tab-btn-analytics');
+            const btnE = document.getElementById('tab-btn-employees');
             const btnP = document.getElementById('tab-btn-profile');
             
-            btnC.className = btnA.className = btnP.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
+            btnC.className = btnA.className = btnE.className = btnP.className = "bg-[#1E293B] text-gray-400 hover:text-white border border-gray-700 px-6 py-2.5 rounded-xl transition text-sm";
             
             if(tabName === 'coupons') {
                 btnC.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
@@ -376,6 +435,9 @@
             } else if(tabName === 'analytics') {
                 btnA.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 fetchAnalyticsData(); 
+            } else if(tabName === 'employees') {
+                btnE.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
+                fetchEmployees();
             } else {
                 btnP.className = "bg-[#22D3EE] text-slate-900 font-bold px-6 py-2.5 rounded-xl transition text-sm";
                 loadMerchantProfile(); 
@@ -386,17 +448,30 @@
         async function fetchAnalyticsData() {
             if (!MERCHANT_ID) return;
             try {
-                const { data: logs, error } = await supaClient.from('coupon_analytics').select('*').eq('merchant_id', MERCHANT_ID).order('created_at', { ascending: false });
+                // 1. Τραβάμε τα analytics μαζί με τα ονόματα των υπαλλήλων αν υπάρχουν
+                const { data: logs, error } = await supaClient
+                    .from('coupon_analytics')
+                    .select('*, merchant_employees(employee_label)')
+                    .eq('merchant_id', MERCHANT_ID)
+                    .order('created_at', { ascending: false });
                 if (error) throw error;
 
                 let push = 0, views = 0, clicks = 0, redeemed = 0;
+                let employeeCounters = {}; // Ανάλυση ανά υπάλληλο
                 
                 if(logs) {
                     logs.forEach(row => {
                         if(row.event_type === 'received_notification') push++;
                         if(row.event_type === 'viewed') views++;
                         if(row.event_type === 'clicked') clicks++;
-                        if(row.event_type === 'redeemed') redeemed++;
+                        if(row.event_type === 'redeemed') {
+                            redeemed++;
+                            // Καταγραφή εξαργύρωσης στον συγκεκριμένο υπάλληλο
+                            if(row.merchant_employees) {
+                                const label = row.merchant_employees.employee_label;
+                                employeeCounters[label] = (employeeCounters[label] || 0) + 1;
+                            }
+                        }
                     });
                 }
 
@@ -404,6 +479,21 @@
                 document.getElementById('stat-views').innerText = views;
                 document.getElementById('stat-clicks').innerText = clicks;
                 document.getElementById('stat-redeemed').innerText = redeemed;
+
+                // Γέμισμα Employee Shift Leaderboard
+                const empStatsBody = document.getElementById('employee-stats-body');
+                const empKeys = Object.keys(employeeCounters);
+                if(empKeys.length === 0) {
+                    empStatsBody.innerHTML = `<tr><td colspan="3" class="py-3 text-center text-gray-500">Καμία καταχωρημένη εξαργύρωση από υπάλληλο ακόμα.</td></tr>`;
+                } else {
+                    empStatsBody.innerHTML = empKeys.map(key => `
+                        <tr class="hover:bg-slate-800/20">
+                            <td class="py-2.5 font-bold text-cyan-400">${key}</td>
+                            <td class="py-2.5 text-gray-400">Ενεργή Βάρδια</td>
+                            <td class="py-2.5 text-center font-mono font-bold text-emerald-400">${employeeCounters[key]}</td>
+                        </tr>
+                    `).join('');
+                }
 
                 let pctViews = push > 0 ? Math.round((views / push) * 100) : 0;
                 let pctClicks = push > 0 ? Math.round((clicks / push) * 100) : 0;
@@ -418,7 +508,7 @@
 
                 const tableBody = document.getElementById('analytics-table-body');
                 if(!logs || logs.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-600">Καμία live καταγραφή ακόμα.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-600">Καμία live καταγραφή ακόμα.</td></tr>`;
                     return;
                 }
 
@@ -429,11 +519,13 @@
                     if(row.event_type === 'clicked') { badgeColor = 'text-amber-400 bg-amber-500/10'; labelText = '🖱️ Έκανε Κλικ / Αποθήκευση'; }
                     if(row.event_type === 'redeemed') { badgeColor = 'text-emerald-400 bg-emerald-500/10 font-bold'; labelText = '💰 ΕΞΑΡΓΥΡΩΣΗ ΣΤΟ ΤΑΜΕΙΟ'; }
 
+                    let cashierName = row.merchant_employees ? row.merchant_employees.employee_label : '<span class="text-gray-600">-</span>';
                     let timeStr = new Date(row.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'});
                     return `
                         <tr class="hover:bg-slate-800/40">
                             <td class="p-3 font-semibold text-gray-300">${row.student_id}</td>
                             <td class="p-3"><span class="px-2.5 py-1 rounded-md text-[10px] ${badgeColor}">${labelText}</span></td>
+                            <td class="p-3 font-medium text-gray-400">${cashierName}</td>
                             <td class="p-3 text-gray-500">${timeStr}</td>
                         </tr>
                     `;
@@ -441,6 +533,75 @@
 
             } catch (err) { console.error("Analytics Error:", err); }
         }
+
+        // --- 👥 ΛΕΙΤΟΥΡΓΙΕΣ ΔΙΑΧΕΙΡΙΣΗΣ ΠΡΟΣΩΠΙΚΟΥ ---
+        async function fetchEmployees() {
+            if (!MERCHANT_ID) return;
+            try {
+                const { data: list, error } = await supaClient.from('merchant_employees').select('*').eq('merchant_id', MERCHANT_ID).order('created_at', { ascending: false });
+                if (error) throw error;
+
+                const body = document.getElementById('employees-table-body');
+                if(!list || list.length === 0) {
+                    body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Δεν έχετε προσθέσει υπαλλήλους ακόμα.</td></tr>`;
+                    return;
+                }
+
+                body.innerHTML = list.map(emp => `
+                    <tr class="hover:bg-slate-800/30 transition">
+                        <td class="p-3 font-bold text-white">${emp.employee_label}</td>
+                        <td class="p-3 font-mono text-cyan-400">${emp.username}</td>
+                        <td class="p-3 font-mono text-gray-400">•••• (Κρυφός)</td>
+                        <td class="p-3 text-right">
+                            <button onclick="deleteEmployee('${emp.id}')" class="text-red-400 hover:text-red-300 font-bold bg-red-500/10 px-2.5 py-1 rounded-md text-xs">Διαγραφή</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) { console.error(err); }
+        }
+
+        document.getElementById('employee-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!MERCHANT_ID) return;
+
+            const status = document.getElementById('emp-status');
+            status.className = "text-center text-xs font-medium text-yellow-400 block mt-2";
+            status.innerText = "Καταχώρηση...";
+
+            const label = document.getElementById('emp-label').value;
+            const username = document.getElementById('emp-username').value;
+            const password = document.getElementById('emp-password').value;
+
+            try {
+                const { error } = await supaClient.from('merchant_employees').insert([{
+                    merchant_id: MERCHANT_ID,
+                    employee_label: label,
+                    username: username,
+                    password: password
+                }]);
+
+                if (error) {
+                    if (error.code === '23505') throw new Error('Το Username χρησιμοποιείται ήδη σε αυτό το κατάστημα.');
+                    throw error;
+                }
+
+                status.className = "text-center text-xs font-medium text-emerald-400 block mt-2";
+                status.innerText = "🎉 Ο υπάλληλος προστέθηκε επιτυχώς!";
+                document.getElementById('employee-form').reset();
+                fetchEmployees();
+                setTimeout(() => status.classList.add('hidden'), 3000);
+            } catch (err) {
+                status.className = "text-center text-xs font-medium text-red-400 block mt-2";
+                status.innerText = "❌ " + err.message;
+            }
+        });
+
+        window.deleteEmployee = async (id) => {
+            if(confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον υπάλληλο; Θα χάσει την πρόσβαση στο Scanner.')) {
+                await supaClient.from('merchant_employees').delete().eq('id', id);
+                fetchEmployees();
+            }
+        };
 
         // --- 📱 LIVE MOBILE PREVIEW LOGIC ---
         function updatePreview() {
